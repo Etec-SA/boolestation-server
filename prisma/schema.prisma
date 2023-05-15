@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String         @id @default(uuid())
+  levelStateId     String
+  profilePictureId String
+  name             String
+  password         String
+  birthdate        DateTime
+  isPremium        Boolean        @default(false)
+  xp               Int            @default(0)
+  profilePicture   ProfilePicture @relation(fields: [profilePictureId], references: [id])
+  levelState       LevelState     @relation(fields: [levelStateId], references: [id])
+
+  @@map("users")
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String
+  description String
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id        String     @id @default(uuid())
+  title     String
+  slug      String
+  content   String
+  moduleId  String
+  module    Module     @relation(fields: [moduleId], references: [id])
+  exercises Exercise[]
+
+  @@map("lessons")
+}
+
+model Exercise {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  lessonId    String
+  lesson      Lesson        @relation(fields: [lessonId], references: [id])
+  alternatives Alternative[]
+
+  @@map("exercises")
+}
+
+model Alternative {
+  id         String   @id @default(uuid())
+  content    String
+  isCorrect  Boolean
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+}
+
+model LevelState {
+  id         String @id @default(uuid())
+  title      String
+  requiredXp Int
+  users      User[]
+
+  @@map("level_states")
+}
+
+model ProfilePicture {
+  id    String @id @default(uuid())
+  url   String
+  users User[]
+
+  @@map("profile_pictures")
+}
