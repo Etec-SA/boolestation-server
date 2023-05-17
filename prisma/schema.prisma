@@ -63,6 +63,7 @@ model Alternative {
   isCorrect  Boolean
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  @@map("alternatives")
 }
 
 model LevelState {
