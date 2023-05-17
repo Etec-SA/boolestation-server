@@ -31,6 +31,7 @@ model Module {
   slug        String
   description String
   lessons     Lesson[]
+  @@map("modules")
 }
 
 model Lesson {
