@@ -16,5 +16,5 @@ export class CreateUserDto {
 
     @IsNotEmpty({message: 'A data de nascimento não pode estar vazia.'})
     @IsDate({message: 'O valor inserido não é uma data.'})
-    birthdate: Date
+    birthdate: Date;
 }
