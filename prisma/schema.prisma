@@ -12,10 +12,11 @@ datasource db {
 
 model User {
   id               String         @id @default(uuid())
-  name             String
-  email String
+  username         String
+  email            String
   password         String
   birthdate        DateTime
+  name             String
   isPremium        Boolean        @default(false)
   xp               Int            @default(0)
   levelStateId     String
@@ -32,6 +33,7 @@ model Module {
   slug        String
   description String
   lessons     Lesson[]
+
   @@map("modules")
 }
 
@@ -48,11 +50,11 @@ model Lesson {
 }
 
 model Exercise {
-  id          String        @id @default(uuid())
-  title       String
-  description String
-  lessonId    String
-  lesson      Lesson        @relation(fields: [lessonId], references: [id])
+  id           String        @id @default(uuid())
+  title        String
+  description  String
+  lessonId     String
+  lesson       Lesson        @relation(fields: [lessonId], references: [id])
   alternatives Alternative[]
 
   @@map("exercises")
@@ -64,6 +66,7 @@ model Alternative {
   isCorrect  Boolean
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
+
   @@map("alternatives")
 }
 
