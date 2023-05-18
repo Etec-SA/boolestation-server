@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, Length, Matches } from "class-validator";
+import { IsDate, IsEmail, IsNotEmpty, Length, Matches } from "class-validator";
 export class CreateUserDto {
     @IsNotEmpty({ message: 'O nome de usuário não pode estar vazio.' })
     @Length(4, 22, { message: 'O nome de usuário deve ter entre 4 e 20 caracteres.' })
@@ -13,4 +13,8 @@ export class CreateUserDto {
     @IsNotEmpty({message: 'A senha não pode estar vazia.'})
     @Length(8, 128, {message: 'A senha deve ter entre 8 a 128 caracteres'})
     password: string;
+
+    @IsNotEmpty({message: 'A data de nascimento não pode estar vazia.'})
+    @IsDate({message: 'O valor inserido não é uma data.'})
+    birthdate: Date
 }
