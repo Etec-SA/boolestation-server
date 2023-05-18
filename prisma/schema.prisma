@@ -12,13 +12,14 @@ datasource db {
 
 model User {
   id               String         @id @default(uuid())
-  levelStateId     String
-  profilePictureId String
   name             String
+  email String
   password         String
   birthdate        DateTime
   isPremium        Boolean        @default(false)
   xp               Int            @default(0)
+  levelStateId     String
+  profilePictureId String
   profilePicture   ProfilePicture @relation(fields: [profilePictureId], references: [id])
   levelState       LevelState     @relation(fields: [levelStateId], references: [id])
 
