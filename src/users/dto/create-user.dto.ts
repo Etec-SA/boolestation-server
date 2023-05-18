@@ -8,6 +8,9 @@ export class CreateUserDto {
     username: string;
 
     @IsEmail(null, {message: 'O endereço de email é inválido.'})
-    email: string
-    
+    email: string;
+
+    @IsNotEmpty({message: 'A senha não pode estar vazia.'})
+    @Length(8, 128, {message: 'A senha deve ter entre 8 a 128 caracteres'})
+    password: string;
 }
