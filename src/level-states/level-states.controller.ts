@@ -29,6 +29,6 @@ export class LevelStatesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.levelStatesService.remove(+id);
+    return this.levelStatesService.remove(id);
   }
 }
