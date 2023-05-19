@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { LevelStatesService } from './level-states.service';
 import { LevelStatesController } from './level-states.controller';
+import { PrismaService } from 'src/database/prisma.service';
 
 @Module({
   controllers: [LevelStatesController],
-  providers: [LevelStatesService]
+  providers: [LevelStatesService, PrismaService]
 })
 export class LevelStatesModule {}
