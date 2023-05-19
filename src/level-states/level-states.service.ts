@@ -6,9 +6,10 @@ import { UpdateLevelStateDto } from './dto/update-level-state.dto';
 @Injectable()
 export class LevelStatesService {
   constructor(private prisma: PrismaService){}
-  
-  create(createLevelStateDto: CreateLevelStateDto) {
-    return 'This action adds a new levelState';
+
+  async create(data: CreateLevelStateDto) {
+    const levelState = await this.prisma.levelState.create({data});
+    return levelState;
   }
 
   findAll() {
