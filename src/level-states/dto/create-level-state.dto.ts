@@ -7,5 +7,5 @@ export class CreateLevelStateDto {
 
     @IsNotEmpty({message: 'O campo "requiredXp" não pode estar vazio.'})
     @IsInt({message: 'O campo "requiredXp" precisa ser um número inteiro.'})
-    requiredXp: Number;
+    requiredXp: number;
 }
