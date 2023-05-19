@@ -17,4 +17,8 @@ export class CreateUserDto {
     @IsNotEmpty({message: 'A data de nascimento não pode estar vazia.'})
     @IsDate({message: 'O valor inserido não é uma data.'})
     birthdate: Date;
+
+    @IsNotEmpty({message: 'O nome não pode estar vazio.'})
+    @Length(1, 100, {message: 'O nome deve conter entre 1 a 100 caracteres.'})
+    name: string;
 }
