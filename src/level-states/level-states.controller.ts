@@ -19,7 +19,7 @@ export class LevelStatesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.levelStatesService.findOne(+id);
+    return this.levelStatesService.findOne(id);
   }
 
   @Patch(':id')
