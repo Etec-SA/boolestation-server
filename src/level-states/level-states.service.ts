@@ -12,8 +12,8 @@ export class LevelStatesService {
     return levelState;
   }
 
-  findAll() {
-    return `This action returns all levelStates`;
+  async findAll() {
+    return await this.prisma.levelState.findMany();
   }
 
   findOne(id: number) {
