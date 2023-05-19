@@ -24,7 +24,7 @@ export class LevelStatesController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLevelStateDto: UpdateLevelStateDto) {
-    return this.levelStatesService.update(+id, updateLevelStateDto);
+    return this.levelStatesService.update(id, updateLevelStateDto);
   }
 
   @Delete(':id')
