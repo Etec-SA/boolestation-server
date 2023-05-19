@@ -16,8 +16,8 @@ export class LevelStatesService {
     return await this.prisma.levelState.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} levelState`;
+  async findOne(id: string) {
+    return await this.prisma.levelState.findFirst({where:{id}})
   }
 
   update(id: number, updateLevelStateDto: UpdateLevelStateDto) {
