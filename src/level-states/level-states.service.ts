@@ -29,7 +29,7 @@ export class LevelStatesService {
     return levelState;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} levelState`;
+  async remove(id: string) {
+    return await this.prisma.levelState.delete({where: {id}});
   }
 }
