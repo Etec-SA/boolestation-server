@@ -20,8 +20,13 @@ export class LevelStatesService {
     return await this.prisma.levelState.findFirst({where:{id}})
   }
 
-  update(id: number, updateLevelStateDto: UpdateLevelStateDto) {
-    return `This action updates a #${id} levelState`;
+  async update(id: string, data: UpdateLevelStateDto) {
+    const levelState = await this.prisma.levelState.update({
+      where: {id},
+      data
+    });
+
+    return levelState;
   }
 
   remove(id: number) {
