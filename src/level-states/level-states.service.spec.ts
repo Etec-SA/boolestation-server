@@ -27,7 +27,7 @@ const InMemoryLevelStates = [
 ]
 
 const prismaMock = {
-  post: {
+  levelStates: {
     create: jest.fn().mockReturnValue(InMemoryLevelStates[0]),
     findMany: jest.fn().mockResolvedValue(InMemoryLevelStates),
     findUnique: jest.fn().mockResolvedValue(InMemoryLevelStates[0]),
@@ -42,7 +42,8 @@ describe('LevelStatesService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LevelStatesService
+      providers: [LevelStatesService,
+        {provide: PrismaService, useValue: prismaMock}
       ],
     }).compile();
 
