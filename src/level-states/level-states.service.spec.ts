@@ -26,6 +26,16 @@ const InMemoryLevelStates = [
   },
 ]
 
+const prismaMock = {
+  post: {
+    create: jest.fn().mockReturnValue(InMemoryLevelStates[0]),
+    findMany: jest.fn().mockResolvedValue(InMemoryLevelStates),
+    findUnique: jest.fn().mockResolvedValue(InMemoryLevelStates[0]),
+    update: jest.fn().mockResolvedValue(InMemoryLevelStates[0]),
+    delete: jest.fn(),
+  },
+};
+
 describe('LevelStatesService', () => {
   let service: LevelStatesService;
   let prisma: PrismaService;
