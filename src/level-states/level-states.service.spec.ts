@@ -27,7 +27,7 @@ const InMemoryLevelStates = [
 ]
 
 const prismaMock = {
-  levelStates: {
+  levelState: {
     create: jest.fn().mockReturnValue(InMemoryLevelStates[0]),
     findMany: jest.fn().mockResolvedValue(InMemoryLevelStates),
     findUnique: jest.fn().mockResolvedValue(InMemoryLevelStates[0]),
@@ -54,4 +54,13 @@ describe('LevelStatesService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+  
+  describe('findAll', ()=>{
+    it('should return an array of level states', async ()=>{
+      const response = await service.findAll();
+      expect(response).toEqual(InMemoryLevelStates);
+      expect(prisma.levelState.findMany).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.findMany).toHaveBeenCalledWith(/* nothing */);
+    })
+  })
 });
