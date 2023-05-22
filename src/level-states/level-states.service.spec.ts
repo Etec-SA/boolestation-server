@@ -63,4 +63,16 @@ describe('LevelStatesService', () => {
       expect(prisma.levelState.findMany).toHaveBeenCalledWith(/* nothing */);
     });
   });
+
+  describe('findOne', ()=>{
+    it('should return a single level state', async ()=>{
+      const response = await service.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+
+      expect(response).toEqual(InMemoryLevelStates[0]);
+      expect(prisma.levelState.findFirst).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.findFirst).toHaveBeenCalledWith({
+        where: { id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e' },
+      });
+    });
+  });
 });
