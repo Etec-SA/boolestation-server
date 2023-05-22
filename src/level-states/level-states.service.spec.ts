@@ -74,5 +74,17 @@ describe('LevelStatesService', () => {
         where: { id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e' },
       });
     });
+
+    it(`should return nothing when level state is not found`, async () => {
+      jest.spyOn(prisma.levelState, 'findFirst').mockResolvedValue(undefined);
+
+      const response = await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+
+      expect(response).toBeUndefined();
+      //expect(prisma.levelState.findFirst).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.findFirst).toHaveBeenCalledWith({
+        where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
+      });
+    });
   });
 });
