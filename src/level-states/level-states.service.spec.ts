@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LevelStatesService } from './level-states.service';
 import { PrismaService } from '../database/prisma.service'
-
+import { CreateLevelStateDto } from './dto/create-level-state.dto';
 
 const InMemoryLevelStates = [
   {
@@ -28,7 +28,11 @@ const InMemoryLevelStates = [
 
 const prismaMock = {
   levelState: {
-    create: jest.fn().mockReturnValue(InMemoryLevelStates[0]),
+    create: jest.fn(({ data }: { data: CreateLevelStateDto }) => {
+      const { title, requiredXp } = data;
+      InMemoryLevelStates.push({ id: crypto.randomUUID(), title, requiredXp });
+      return InMemoryLevelStates[InMemoryLevelStates.length - 1];
+    }),
     findMany: jest.fn().mockResolvedValue(InMemoryLevelStates),
     findFirst: jest.fn().mockResolvedValue(InMemoryLevelStates[0]),
     update: jest.fn().mockResolvedValue(InMemoryLevelStates[0]),
@@ -89,8 +93,22 @@ describe('LevelStatesService', () => {
   });
 
   describe('create', () => {
-    it('should create a new level-state and return it', () => {
+    it('should create a new level-state and return it', async () => {
+      const oldArraySize = InMemoryLevelStates.length;
 
+      const newLevelState: CreateLevelStateDto = { title: 'Arquimago', requiredXp: 1000 };
+
+      const createdLevelState = await service.create(newLevelState);
+
+      expect(createdLevelState).toBeDefined();
+      expect(createdLevelState.id).toBeDefined();
+      expect(createdLevelState.title).toEqual(newLevelState.title);
+      expect(createdLevelState.requiredXp).toEqual(newLevelState.requiredXp);
+
+      expect(prisma.levelState.create).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.create).toHaveBeenCalledWith({ data: { ...newLevelState } });
+
+      expect(InMemoryLevelStates.length).toBeGreaterThan(oldArraySize);
     });
-  })
+  });
 });
