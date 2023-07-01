@@ -87,4 +87,10 @@ describe('LevelStatesService', () => {
       });
     });
   });
+
+  describe('create', () => {
+    it('should create a new level-state and return it', () => {
+
+    });
+  })
 });
