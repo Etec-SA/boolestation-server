@@ -112,6 +112,19 @@ describe('LevelStatesService', () => {
 
       expect(InMemoryLevelStates.length).toBeGreaterThan(oldArraySize);
     });
+
+    it('should throw an error if the level state creation fails', async () => {
+      const newLevelState: CreateLevelStateDto = { title: 'Arquimago', requiredXp: 1000 };
+      const oldArraySize = InMemoryLevelStates.length;
+
+      jest.spyOn(prisma.levelState, 'create').mockRejectedValueOnce(new Error('Failed to create level state'));
+
+      await expect(service.create(newLevelState)).rejects.toThrowError('Failed to create level state');
+      expect(prisma.levelState.create).toHaveBeenCalledTimes(2);
+      expect(prisma.levelState.create).toHaveBeenCalledWith({ data: { ...newLevelState } });
+      expect(InMemoryLevelStates.length).not.toBeGreaterThan(oldArraySize);
+    });
+
   });
 
   describe('update', () => {
@@ -179,4 +192,29 @@ describe('LevelStatesService', () => {
       });
     });
   });
+
+  describe('remove', () => {
+    it('should remove an existing level state', async () => {
+      const existingLevelStateId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
+
+      jest.spyOn(prisma.levelState, 'delete').mockResolvedValueOnce(existingLevelStateId as unknown as LevelState);
+
+      const result = await service.remove(existingLevelStateId);
+
+      expect(result).toEqual(existingLevelStateId);
+      expect(prisma.levelState.delete).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.delete).toHaveBeenCalledWith({ where: { id: existingLevelStateId } });
+    });
+
+    it('should throw an error if the level state to remove does not exist', async () => {
+      const nonExistingLevelStateId = 'non-existing-id';
+
+      jest.spyOn(prisma.levelState, 'delete').mockRejectedValue(new Error('Level state not found'));
+
+      await expect(service.remove(nonExistingLevelStateId)).rejects.toThrowError('Level state not found');
+      expect(prisma.levelState.delete).toHaveBeenCalledTimes(2);
+      expect(prisma.levelState.delete).toHaveBeenCalledWith({ where: { id: nonExistingLevelStateId } });
+    });
+  });
+
 });
