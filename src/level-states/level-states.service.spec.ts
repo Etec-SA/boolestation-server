@@ -3,6 +3,7 @@ import { LevelStatesService } from './level-states.service';
 import { PrismaService } from '../database/prisma.service';
 import { LevelState } from '@prisma/client';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
+import { UpdateLevelStateDto } from './dto/update-level-state.dto';
 
 const InMemoryLevelStates: Array<LevelState> = [
   {
@@ -110,6 +111,72 @@ describe('LevelStatesService', () => {
       expect(prisma.levelState.create).toHaveBeenCalledWith({ data: { ...newLevelState } });
 
       expect(InMemoryLevelStates.length).toBeGreaterThan(oldArraySize);
+    });
+  });
+
+  describe('update', () => {
+
+    it('should update an existing level state and return the updated level state', async () => {
+      const existingLevelState: LevelState = InMemoryLevelStates[0];
+
+      const updatedLevelStateData: UpdateLevelStateDto = {
+        title: 'Mestre',
+        requiredXp: 200,
+      };
+
+      const updatedLevelState: LevelState = {
+        id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e',
+        title: 'Mestre',
+        requiredXp: 200,
+      };
+
+      jest.spyOn(prisma.levelState, 'update').mockResolvedValueOnce(updatedLevelState);
+
+      const result = await service.update(existingLevelState.id, updatedLevelStateData);
+
+      expect(result).toEqual(updatedLevelState);
+      expect(prisma.levelState.update).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.update).toHaveBeenCalledWith({
+        where: { id: existingLevelState.id },
+        data: updatedLevelStateData,
+      });
+    });
+
+    it('should throw an error if the level state does not exist', async () => {
+      const nonExistingLevelStateId = 'non-existing-id';
+      const updatedLevelStateData: UpdateLevelStateDto = {
+        title: 'Mestre',
+        requiredXp: 200,
+      };
+
+      jest.spyOn(prisma.levelState, 'update').mockRejectedValueOnce(new Error());
+
+      await expect(service.update(nonExistingLevelStateId, updatedLevelStateData)).rejects.toThrowError();
+      expect(prisma.levelState.update).toHaveBeenCalledTimes(2);
+      expect(prisma.levelState.update).toHaveBeenCalledWith({
+        where: { id: nonExistingLevelStateId },
+        data: updatedLevelStateData,
+      });
+    });
+
+    it('should handle errors during update', async () => {
+      const existingLevelState: LevelState = InMemoryLevelStates[0];
+
+      const updatedLevelStateData: UpdateLevelStateDto = {
+        title: 'Mestre',
+        requiredXp: 200,
+      };
+
+      const updateError = new Error('Failed to update level state');
+
+      jest.spyOn(prisma.levelState, 'update').mockRejectedValueOnce(updateError);
+
+      await expect(service.update(existingLevelState.id, updatedLevelStateData)).rejects.toThrowError(updateError);
+      expect(prisma.levelState.update).toHaveBeenCalledTimes(3);
+      expect(prisma.levelState.update).toHaveBeenCalledWith({
+        where: { id: existingLevelState.id },
+        data: updatedLevelStateData,
+      });
     });
   });
 });
