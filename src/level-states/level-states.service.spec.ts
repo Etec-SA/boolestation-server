@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LevelStatesService } from './level-states.service';
-import { PrismaService } from '../database/prisma.service'
+import { PrismaService } from '../database/prisma.service';
+import { LevelState } from '@prisma/client';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 
-const InMemoryLevelStates = [
+const InMemoryLevelStates: Array<LevelState> = [
   {
     id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e',
     title: 'Aprendiz',
