@@ -43,7 +43,7 @@ describe('LevelStatesService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [LevelStatesService,
-        {provide: PrismaService, useValue: prismaMock}
+        { provide: PrismaService, useValue: prismaMock }
       ],
     }).compile();
 
@@ -54,9 +54,9 @@ describe('LevelStatesService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-  
-  describe('findAll', ()=>{
-    it('should return an array of level states', async ()=>{
+
+  describe('findAll', () => {
+    it('should return an array of level states', async () => {
       const response = await service.findAll();
       expect(response).toEqual(InMemoryLevelStates);
       expect(prisma.levelState.findMany).toHaveBeenCalledTimes(1);
@@ -64,8 +64,8 @@ describe('LevelStatesService', () => {
     });
   });
 
-  describe('findOne', ()=>{
-    it('should return a single level state', async ()=>{
+  describe('findOne', () => {
+    it('should return a single level state', async () => {
       const response = await service.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
 
       expect(response).toEqual(InMemoryLevelStates[0]);
@@ -81,7 +81,7 @@ describe('LevelStatesService', () => {
       const response = await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
 
       expect(response).toBeUndefined();
-      //expect(prisma.levelState.findFirst).toHaveBeenCalledTimes(1);
+      expect(prisma.levelState.findFirst).toHaveBeenCalledTimes(2);
       expect(prisma.levelState.findFirst).toHaveBeenCalledWith({
         where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
       });
