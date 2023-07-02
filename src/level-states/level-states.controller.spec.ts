@@ -4,6 +4,7 @@ import { LevelStatesService } from './level-states.service';
 
 describe('LevelStatesController', () => {
   let controller: LevelStatesController;
+  let service: LevelStatesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,10 +21,12 @@ describe('LevelStatesController', () => {
       }],
     }).compile();
 
+    service = module.get<LevelStatesService>(LevelStatesService);
     controller = module.get<LevelStatesController>(LevelStatesController);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });
