@@ -37,7 +37,9 @@ describe('LevelStatesController', () => {
         provide: LevelStatesService,
         useValue: {
           findAll: jest.fn().mockResolvedValue(InMemoryLevelStates),
-          findOne: jest.fn(),
+          findOne: jest.fn((id: string) => {
+            return InMemoryLevelStates.find(item => item.id === id);
+          }),
           update: jest.fn(),
           create: jest.fn(),
           remove: jest.fn()
@@ -67,6 +69,24 @@ describe('LevelStatesController', () => {
       jest.spyOn(service, 'findAll').mockRejectedValueOnce(new Error());
 
       expect(controller.findAll()).rejects.toThrowError();
-    })
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return an individual level state', async () => {
+      const result = await controller.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+
+      expect(result).toEqual(InMemoryLevelStates[0]);
+      expect(service.findOne).toHaveBeenCalledTimes(1);
+      expect(service.findOne).toHaveBeenCalledWith('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+    });
+
+    it('should return undefined when not found level state', async () => {
+      const result = await controller.findOne('not-a-valid-id');
+
+      expect(result).toBeUndefined();
+      expect(service.findOne).toHaveBeenCalledTimes(1);
+      expect(service.findOne).toHaveBeenCalledWith('not-a-valid-id');
+    });
   });
 });
