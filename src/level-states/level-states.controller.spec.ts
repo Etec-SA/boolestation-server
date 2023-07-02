@@ -88,5 +88,11 @@ describe('LevelStatesController', () => {
       expect(service.findOne).toHaveBeenCalledTimes(1);
       expect(service.findOne).toHaveBeenCalledWith('not-a-valid-id');
     });
+
+    it('should throw an exception', () => {
+      jest.spyOn(service, 'findOne').mockRejectedValueOnce(new Error());
+
+      expect(controller.findOne('some-id')).rejects.toThrowError();
+    })
   });
 });
