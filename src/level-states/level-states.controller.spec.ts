@@ -188,6 +188,37 @@ describe('LevelStatesController', () => {
 
       expect(controller.update('some-id', body)).rejects.toThrowError();
     });
+  });
 
+  describe('delete', () => {
+    it('should remove an existing level state', async () => {
+      const existingLevelStateId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
+
+      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingLevelStateId as unknown as LevelState);
+
+      const result = await controller.remove(existingLevelStateId);
+
+      expect(result).toEqual(existingLevelStateId);
+      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledWith(existingLevelStateId);
+    });
+
+    it('should throw an error if the level state to remove does not exist', async () => {
+      const nonExistingLevelStateId = 'non-existing-id';
+
+      jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error('Level state not found'));
+
+      await expect(controller.remove(nonExistingLevelStateId)).rejects.toThrowError('Level state not found');
+      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledWith(nonExistingLevelStateId);
+    });
+
+    it('should throw an exception', () => {
+
+      jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error());
+
+      expect(controller.remove('some-id')).rejects.toThrowError();
+
+    });
   });
 });
