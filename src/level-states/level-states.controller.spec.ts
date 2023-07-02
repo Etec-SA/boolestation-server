@@ -62,5 +62,11 @@ describe('LevelStatesController', () => {
       expect(service.findAll).toHaveBeenCalledTimes(1);
       expect(service.findAll).toHaveBeenCalledWith(/* nothing */);
     });
+
+    it('should throw an exception', () => {
+      jest.spyOn(service, 'findAll').mockRejectedValueOnce(new Error());
+
+      expect(controller.findAll()).rejects.toThrowError();
+    })
   });
 });
