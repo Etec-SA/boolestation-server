@@ -3,6 +3,7 @@ import { LevelStatesController } from './level-states.controller';
 import { LevelStatesService } from './level-states.service';
 import { LevelState } from '@prisma/client';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
+import { UpdateLevelStateDto } from './dto/update-level-state.dto';
 
 const InMemoryLevelStates: Array<LevelState> = [
   {
@@ -41,7 +42,21 @@ describe('LevelStatesController', () => {
           findOne: jest.fn((id: string) => {
             return InMemoryLevelStates.find(item => item.id === id);
           }),
-          update: jest.fn(),
+          update: jest.fn((id: string, body: UpdateLevelStateDto) => {
+
+            const item = InMemoryLevelStates.find(item => item.id === id);
+            const idx = InMemoryLevelStates.indexOf(item);
+
+            const updatedLevelState: LevelState = {
+              id,
+              title: body?.title || item.title,
+              requiredXp: body?.requiredXp || item.requiredXp
+            };
+
+            InMemoryLevelStates[idx] = updatedLevelState;
+
+            return updatedLevelState;
+          }),
           create: jest.fn((body: CreateLevelStateDto) => {
 
             body['id'] = crypto.randomUUID();
@@ -89,7 +104,7 @@ describe('LevelStatesController', () => {
       expect(service.findOne).toHaveBeenCalledWith('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
     });
 
-    it('should return undefined when not found level state', async () => {
+    it('should return undefined when not find level state', async () => {
       const result = await controller.findOne('not-a-valid-id');
 
       expect(result).toBeUndefined();
@@ -130,6 +145,49 @@ describe('LevelStatesController', () => {
 
       expect(controller.create(body)).rejects.toThrowError();
     });
+  });
 
-  })
+  describe('update', () => {
+    it('should update a level state', async () => {
+      const body: UpdateLevelStateDto = {
+        title: 'O Modalista',
+        requiredXp: 30000
+      }
+
+      const existingLevelState = InMemoryLevelStates[0];
+
+      const result = await controller.update(existingLevelState.id, body);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(InMemoryLevelStates[0]);
+      expect(service.update).toHaveBeenCalledTimes(1);
+      expect(service.update).toHaveBeenCalledWith(existingLevelState.id, body);
+    });
+
+    it('should return undefined when not find level state', async () => {
+
+      const body: UpdateLevelStateDto = {
+        title: 'O Modalista',
+        requiredXp: 30000
+      }
+      jest.spyOn(service, 'update').mockResolvedValueOnce(undefined);
+      const result = await controller.update('not-a-valid-id', body);
+
+      expect(result).toBeUndefined();
+      expect(service.update).toHaveBeenCalledTimes(1);
+      expect(service.update).toHaveBeenCalledWith('not-a-valid-id', body);
+    });
+
+    it('should throw an exception', () => {
+      const body: UpdateLevelStateDto = {
+        title: 'O Modalista',
+        requiredXp: 30000
+      }
+
+      jest.spyOn(service, 'update').mockRejectedValueOnce(new Error());
+
+      expect(controller.update('some-id', body)).rejects.toThrowError();
+    });
+
+  });
 });
