@@ -8,7 +8,16 @@ describe('LevelStatesController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [LevelStatesController],
-      providers: [LevelStatesService],
+      providers: [{
+        provide: LevelStatesService,
+        useValue: {
+          findAll: jest.fn(),
+          findOne: jest.fn(),
+          update: jest.fn(),
+          create: jest.fn(),
+          remove: jest.fn()
+        }
+      }],
     }).compile();
 
     controller = module.get<LevelStatesController>(LevelStatesController);
