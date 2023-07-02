@@ -119,5 +119,17 @@ describe('LevelStatesController', () => {
       expect(service.create).toHaveBeenCalledTimes(1);
       expect(service.create).toHaveBeenCalledWith(body);
     });
+
+    it('should throw an exception', () => {
+      const body: CreateLevelStateDto = {
+        title: 'O Axiomático',
+        requiredXp: 777
+      }
+
+      jest.spyOn(service, 'create').mockRejectedValueOnce(new Error());
+
+      expect(controller.create(body)).rejects.toThrowError();
+    });
+
   })
 });
