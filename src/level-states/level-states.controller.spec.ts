@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LevelStatesController } from './level-states.controller';
 import { LevelStatesService } from './level-states.service';
 import { LevelState } from '@prisma/client';
+import { CreateLevelStateDto } from './dto/create-level-state.dto';
 
 const InMemoryLevelStates: Array<LevelState> = [
   {
@@ -41,7 +42,14 @@ describe('LevelStatesController', () => {
             return InMemoryLevelStates.find(item => item.id === id);
           }),
           update: jest.fn(),
-          create: jest.fn(),
+          create: jest.fn((body: CreateLevelStateDto) => {
+
+            body['id'] = crypto.randomUUID();
+
+            InMemoryLevelStates.push(body as LevelState);
+
+            return InMemoryLevelStates[InMemoryLevelStates.length - 1];
+          }),
           remove: jest.fn()
         }
       }],
@@ -93,6 +101,23 @@ describe('LevelStatesController', () => {
       jest.spyOn(service, 'findOne').mockRejectedValueOnce(new Error());
 
       expect(controller.findOne('some-id')).rejects.toThrowError();
-    })
+    });
   });
+
+  describe('create', () => {
+    it('should create a level state successfully', async () => {
+      const body: CreateLevelStateDto = {
+        title: 'O Axiomático',
+        requiredXp: 777
+      }
+
+      const result = await controller.create(body);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(InMemoryLevelStates[InMemoryLevelStates.length - 1]);
+      expect(typeof result).toEqual(typeof InMemoryLevelStates[0]);
+      expect(service.create).toHaveBeenCalledTimes(1);
+      expect(service.create).toHaveBeenCalledWith(body);
+    });
+  })
 });
