@@ -24,5 +24,15 @@ describe('LevelStatesController (e2e)', () => {
     expect(response.body).toEqual(levelStatesJson.data);
   });
 
+  it('/level-states/:id (GET)', async () => {
+    const id = '4151e54b-8517-4871-a1d2-acfb67a8bf1a';
+
+    let response = await request(app.getHttpServer())
+      .get(`/level-states/${id}`);
+
+    expect(response).toBeDefined();
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(levelStatesJson.data[0]);
+  });
 });
 
