@@ -18,6 +18,8 @@ describe('LevelStatesController (e2e)', () => {
 
   it('/level-states (GET)', async () => {
     let response = await request(app.getHttpServer()).get('/level-states');
+
+    expect(response).toBeDefined();
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(levelStatesJson.data);
   });
