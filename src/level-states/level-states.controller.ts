@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { LevelStatesService } from './level-states.service';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
 
 @Controller('level-states')
 export class LevelStatesController {
-  constructor(private readonly levelStatesService: LevelStatesService) {}
+  constructor(private readonly levelStatesService: LevelStatesService) { }
 
   @Post()
   create(@Body() createLevelStateDto: CreateLevelStateDto) {
@@ -18,8 +18,10 @@ export class LevelStatesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.levelStatesService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const levelState = await this.levelStatesService.findOne(id);
+    if (!levelState) throw new NotFoundException('Level State not found!');
+    return levelState;
   }
 
   @Patch(':id')

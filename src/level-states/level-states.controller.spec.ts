@@ -4,6 +4,7 @@ import { LevelStatesService } from './level-states.service';
 import { LevelState } from '@prisma/client';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
+import { NotFoundException } from '@nestjs/common';
 
 const InMemoryLevelStates: Array<LevelState> = [
   {
@@ -104,12 +105,15 @@ describe('LevelStatesController', () => {
       expect(service.findOne).toHaveBeenCalledWith('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
     });
 
-    it('should return undefined when not find level state', async () => {
-      const result = await controller.findOne('not-a-valid-id');
+    it('should return an exception when not find level state', async () => {
+      let error: Error;
+      try {
+        await controller.findOne('invalid-id');
+      } catch (e) {
+        error = e;
+      }
 
-      expect(result).toBeUndefined();
-      expect(service.findOne).toHaveBeenCalledTimes(1);
-      expect(service.findOne).toHaveBeenCalledWith('not-a-valid-id');
+      expect(error).toBeInstanceOf(NotFoundException);
     });
 
     it('should throw an exception', () => {
