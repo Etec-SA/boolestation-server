@@ -1,4 +1,4 @@
-export default [
+let data = [
   {
     "id": "4151e54b-8517-4871-a1d2-acfb67a8bf1a",
     "title": "O Aprendiz",
@@ -10,3 +10,5 @@ export default [
     "requiredXp": 200
   }
 ]
+
+export { data };
