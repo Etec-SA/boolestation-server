@@ -10,7 +10,7 @@ async function bootstrap() {
     .setTitle('Boolestation')
     .setDescription('Server application of Boolestation')
     .setVersion('1.0')
-    .addTag('boolestation')
+    .addTag('level-states')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

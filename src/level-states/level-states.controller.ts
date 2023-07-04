@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } 
 import { LevelStatesService } from './level-states.service';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('level-states')
 @Controller('level-states')
 export class LevelStatesController {
   constructor(private readonly levelStatesService: LevelStatesService) { }
