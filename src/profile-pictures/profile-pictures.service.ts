@@ -13,8 +13,8 @@ export class ProfilePicturesService {
     return profilePicture;
   }
 
-  findAll() {
-    return `This action returns all profilePictures`;
+  async findAll() {
+    return await this.prisma.profilePicture.findMany();
   }
 
   findOne(id: number) {
