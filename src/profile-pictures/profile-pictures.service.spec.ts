@@ -217,9 +217,9 @@ describe('ProfilePicturesService', () => {
     it('should throw an error if the profile picture to remove does not exist', async () => {
       const nonExistingProfilePictureId = 'non-existing-id';
 
-      jest.spyOn(prisma.profilePicture, 'delete').mockRejectedValue(new Error('Level state not found'));
+      jest.spyOn(prisma.profilePicture, 'delete').mockRejectedValue(new Error('profile picture not found'));
 
-      await expect(service.remove(nonExistingProfilePictureId)).rejects.toThrowError('Level state not found');
+      await expect(service.remove(nonExistingProfilePictureId)).rejects.toThrowError('profile picture not found');
       expect(prisma.profilePicture.delete).toHaveBeenCalledTimes(2);
       expect(prisma.profilePicture.delete).toHaveBeenCalledWith({ where: { id: nonExistingProfilePictureId } });
     });

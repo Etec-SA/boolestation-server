@@ -34,7 +34,7 @@ export class ProfilePicturesService {
     return profilePicture;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} profilePicture`;
+  async remove(id: string) {
+    return await this.prisma.profilePicture.delete({ where: { id } });
   }
 }
