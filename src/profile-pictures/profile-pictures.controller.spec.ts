@@ -80,4 +80,20 @@ describe('ProfilePicturesController', () => {
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
   });
+
+  describe('findAll', () => {
+    it('should return a profile picture entity successfully', async () => {
+      const result = await controller.findAll();
+
+      expect(result).toEqual(InMemoryProfilePictures);
+      expect(service.findAll).toHaveBeenCalledTimes(1);
+      expect(service.findAll).toHaveBeenCalledWith(/* nothing */);
+    });
+
+    it('should throw an exception', () => {
+      jest.spyOn(service, 'findAll').mockRejectedValueOnce(new Error());
+
+      expect(controller.findAll()).rejects.toThrowError();
+    });
+  });
 });
