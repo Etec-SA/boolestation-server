@@ -25,8 +25,13 @@ export class ProfilePicturesService {
     });
   }
 
-  update(id: number, updateProfilePictureDto: UpdateProfilePictureDto) {
-    return `This action updates a #${id} profilePicture`;
+  async update(id: string, data: UpdateProfilePictureDto) {
+    const profilePicture = await this.prisma.profilePicture.update({
+      where: { id },
+      data
+    });
+
+    return profilePicture;
   }
 
   remove(id: number) {
