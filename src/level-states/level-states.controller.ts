@@ -22,7 +22,6 @@ export class LevelStatesController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const levelState = await this.levelStatesService.findOne(id);
-    if (!levelState) throw new NotFoundException('Level State not found!');
     return levelState;
   }
 

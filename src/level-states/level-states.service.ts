@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class LevelStatesService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) { }
 
   async create(data: CreateLevelStateDto) {
-    const levelState = await this.prisma.levelState.create({data});
+    const levelState = await this.prisma.levelState.create({ data });
     return levelState;
   }
 
@@ -17,12 +18,15 @@ export class LevelStatesService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.levelState.findFirst({where:{id}})
+    const levelState = await this.prisma.levelState.findFirst({ where: { id } })
+    if (!levelState) throw new NotFoundException('Level State not found!');
+    return levelState;
   }
+
 
   async update(id: string, data: UpdateLevelStateDto) {
     const levelState = await this.prisma.levelState.update({
-      where: {id},
+      where: { id },
       data
     });
 
@@ -30,6 +34,6 @@ export class LevelStatesService {
   }
 
   async remove(id: string) {
-    return await this.prisma.levelState.delete({where: {id}});
+    return await this.prisma.levelState.delete({ where: { id } });
   }
 }

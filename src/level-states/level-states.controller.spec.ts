@@ -105,15 +105,9 @@ describe('LevelStatesController', () => {
       expect(service.findOne).toHaveBeenCalledWith('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
     });
 
-    it('should return an exception when not find level state', async () => {
-      let error: Error;
-      try {
-        await controller.findOne('invalid-id');
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error).toBeInstanceOf(NotFoundException);
+    it('should return undefined when not find level state', async () => {
+        const result = await controller.findOne('invalid-id');
+        expect(result).toBeUndefined();
     });
 
     it('should throw an exception', () => {

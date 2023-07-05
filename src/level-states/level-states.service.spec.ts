@@ -4,6 +4,7 @@ import { PrismaService } from '../database/prisma.service';
 import { LevelState } from '@prisma/client';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
+import { NotFoundException } from '@nestjs/common';
 
 const InMemoryLevelStates: Array<LevelState> = [
   {
@@ -81,16 +82,15 @@ describe('LevelStatesService', () => {
       });
     });
 
-    it(`should return nothing when level state is not found`, async () => {
+    it(`should return an error when level state is not found`, async () => {
       jest.spyOn(prisma.levelState, 'findFirst').mockResolvedValue(undefined);
 
-      const response = await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+      try {
+        await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
 
-      expect(response).toBeUndefined();
-      expect(prisma.levelState.findFirst).toHaveBeenCalledTimes(2);
-      expect(prisma.levelState.findFirst).toHaveBeenCalledWith({
-        where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
-      });
     });
   });
 
