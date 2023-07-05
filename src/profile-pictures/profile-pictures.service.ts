@@ -17,8 +17,12 @@ export class ProfilePicturesService {
     return await this.prisma.profilePicture.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} profilePicture`;
+  async findOne(id: string) {
+    return await this.prisma.profilePicture.findFirst({
+      where: {
+        id
+      }
+    });
   }
 
   update(id: number, updateProfilePictureDto: UpdateProfilePictureDto) {
