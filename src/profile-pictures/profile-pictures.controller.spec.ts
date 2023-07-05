@@ -118,4 +118,32 @@ describe('ProfilePicturesController', () => {
       expect(controller.findOne('some-id')).rejects.toThrowError();
     });
   });
+
+  describe('create', () => {
+    it('should create a profile picture successfully', async () => {
+      const body: CreateProfilePictureDto = {
+        title: 'Kant',
+        url: 'kant.com/picture'
+      }
+
+      const result = await controller.create(body);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(InMemoryProfilePictures[InMemoryProfilePictures.length - 1]);
+      expect(typeof result).toEqual(typeof InMemoryProfilePictures[0]);
+      expect(service.create).toHaveBeenCalledTimes(1);
+      expect(service.create).toHaveBeenCalledWith(body);
+    });
+
+    it('should throw an exception', () => {
+      const body: CreateProfilePictureDto = {
+        title: 'Kant',
+        url: 'kant.com/picture'
+      }
+
+      jest.spyOn(service, 'create').mockRejectedValueOnce(new Error());
+
+      expect(controller.create(body)).rejects.toThrowError();
+    });
+  });
 });
