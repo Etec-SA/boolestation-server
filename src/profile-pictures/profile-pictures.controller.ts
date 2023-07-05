@@ -16,12 +16,12 @@ export class ProfilePicturesController {
   findAll() {
     return this.profilePicturesService.findAll();
   }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.profilePicturesService.findOne(id);
+  }
+
   /*
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-      return this.profilePicturesService.findOne(+id);
-    }
-  
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
       return this.profilePicturesService.update(+id, updateProfilePictureDto);
