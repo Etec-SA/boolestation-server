@@ -4,6 +4,7 @@ import { ProfilePicturesService } from './profile-pictures.service';
 import { ProfilePicture } from '@prisma/client';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
+import { NotFoundException } from '@nestjs/common';
 
 
 const InMemoryProfilePictures: Array<ProfilePicture> = [
@@ -94,6 +95,33 @@ describe('ProfilePicturesController', () => {
       jest.spyOn(service, 'findAll').mockRejectedValueOnce(new Error());
 
       expect(controller.findAll()).rejects.toThrowError();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return an individual profile picture', async () => {
+      const result = await controller.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+
+      expect(result).toEqual(InMemoryProfilePictures[0]);
+      expect(service.findOne).toHaveBeenCalledTimes(1);
+      expect(service.findOne).toHaveBeenCalledWith('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+    });
+
+    it('should return an exception when not find profile picture', async () => {
+      let error: Error;
+      try {
+        await controller.findOne('invalid-id');
+      } catch (e) {
+        error = e;
+      }
+
+      expect(error).toBeInstanceOf(NotFoundException);
+    });
+
+    it('should throw an exception', () => {
+      jest.spyOn(service, 'findOne').mockRejectedValueOnce(new Error());
+
+      expect(controller.findOne('some-id')).rejects.toThrowError();
     });
   });
 });
