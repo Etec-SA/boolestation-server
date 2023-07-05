@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfilePicture } from '@prisma/client';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../database/prisma.service';
 import { ProfilePicturesService } from './profile-pictures.service';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 
@@ -58,5 +58,7 @@ describe('ProfilePicturesService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+    expect(prisma).toBeDefined();
   });
+
 });
