@@ -190,4 +190,36 @@ describe('ProfilePicturesController', () => {
       expect(controller.update('some-id', body)).rejects.toThrowError();
     });
   });
+
+  describe('delete', () => {
+    it('should remove an existing profile picture', async () => {
+      const existingProfilePictureId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
+
+      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingProfilePictureId as unknown as ProfilePicture);
+
+      const result = await controller.remove(existingProfilePictureId);
+
+      expect(result).toEqual(existingProfilePictureId);
+      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledWith(existingProfilePictureId);
+    });
+
+    it('should throw an error if the profile picture to remove does not exist', async () => {
+      const nonExistingProfilePictureId = 'non-existing-id';
+
+      jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error('profile picture not found'));
+
+      await expect(controller.remove(nonExistingProfilePictureId)).rejects.toThrowError('profile picture not found');
+      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledWith(nonExistingProfilePictureId);
+    });
+
+    it('should throw an exception', () => {
+
+      jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error());
+
+      expect(controller.remove('some-id')).rejects.toThrowError();
+
+    });
+  });
 });
