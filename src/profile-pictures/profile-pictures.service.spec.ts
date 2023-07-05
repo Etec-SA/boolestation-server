@@ -70,6 +70,31 @@ describe('ProfilePicturesService', () => {
     });
   });
 
+  describe('findOne', () => {
+    it('should return a single profile-picture', async () => {
+      const response = await service.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+
+      expect(response).toEqual(InMemoryProfilePictures[0]);
+      expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(1);
+      expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
+        where: { id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e' },
+      });
+    });
+
+    it(`should return nothing when profile picture is not found`, async () => {
+      jest.spyOn(prisma.profilePicture, 'findFirst').mockResolvedValue(undefined);
+
+      const response = await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+
+      expect(response).toBeUndefined();
+      expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(2);
+      expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
+        where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
+      });
+    });
+  });
+
+
   describe('create', () => {
     it('should create a new profile-picture and return it', async () => {
       const oldArraySize = InMemoryProfilePictures.length;
