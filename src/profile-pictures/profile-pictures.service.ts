@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 import { PrismaService } from '../database/prisma.service';
@@ -18,11 +18,15 @@ export class ProfilePicturesService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.profilePicture.findFirst({
+    const profilePicture = await this.prisma.profilePicture.findFirst({
       where: {
         id
       }
     });
+
+    if (!profilePicture) throw new NotFoundException('Profile Picture Not Found');
+
+    return profilePicture;
   }
 
   async update(id: string, data: UpdateProfilePictureDto) {

@@ -4,6 +4,7 @@ import { PrismaService } from '../database/prisma.service';
 import { ProfilePicturesService } from './profile-pictures.service';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
+import { NotFoundException } from '@nestjs/common';
 
 const InMemoryProfilePictures: Array<ProfilePicture> = [
   {
@@ -82,16 +83,17 @@ describe('ProfilePicturesService', () => {
       });
     });
 
-    it(`should return nothing when profile picture is not found`, async () => {
+    it(`should return an exception when profile picture is not found`, async () => {
       jest.spyOn(prisma.profilePicture, 'findFirst').mockResolvedValue(undefined);
-
-      const response = await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
-
-      expect(response).toBeUndefined();
-      expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(2);
-      expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
-        where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
-      });
+      try {
+        await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+        expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(2);
+        expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
+          where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
+        });
+      }
     });
   });
 
