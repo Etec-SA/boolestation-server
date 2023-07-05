@@ -61,6 +61,15 @@ describe('ProfilePicturesService', () => {
     expect(prisma).toBeDefined();
   });
 
+  describe('findAll', () => {
+    it('should return an array of profile pictures', async () => {
+      const response = await service.findAll();
+      expect(response).toEqual(InMemoryProfilePictures);
+      expect(prisma.profilePicture.findMany).toHaveBeenCalledTimes(1);
+      expect(prisma.profilePicture.findMany).toHaveBeenCalledWith(/* nothing */);
+    });
+  });
+
   describe('create', () => {
     it('should create a new profile-picture and return it', async () => {
       const oldArraySize = InMemoryProfilePictures.length;
@@ -83,7 +92,7 @@ describe('ProfilePicturesService', () => {
       expect(InMemoryProfilePictures.length).toBeGreaterThan(oldArraySize);
     });
 
-    it('should throw an error if the level state creation fails', async () => {
+    it('should throw an error if the profile-picture creation fails', async () => {
       const oldArraySize = InMemoryProfilePictures.length;
 
       const newProfilePicture: CreateProfilePictureDto = {
