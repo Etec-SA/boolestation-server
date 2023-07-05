@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfilePicture } from '@prisma/client';
+import { PrismaService } from 'src/database/prisma.service';
 import { ProfilePicturesService } from './profile-pictures.service';
+import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 
 const InMemoryProfilePictures: Array<ProfilePicture> = [
   {
@@ -25,16 +27,32 @@ const InMemoryProfilePictures: Array<ProfilePicture> = [
   },
 ]
 
-
+const prismaMock = {
+  levelState: {
+    create: jest.fn(({ data }: { data: CreateProfilePictureDto }) => {
+      const { title, url } = data;
+      InMemoryProfilePictures.push({ id: crypto.randomUUID(), title, url });
+      return InMemoryProfilePictures[InMemoryProfilePictures.length - 1];
+    }),
+    findMany: jest.fn().mockResolvedValue(InMemoryProfilePictures),
+    findFirst: jest.fn().mockResolvedValue(InMemoryProfilePictures[0]),
+    update: jest.fn().mockResolvedValue(InMemoryProfilePictures[0]),
+    delete: jest.fn(),
+  },
+};
 
 describe('ProfilePicturesService', () => {
   let service: ProfilePicturesService;
+  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProfilePicturesService],
+      providers: [ProfilePicturesService,
+        { provide: PrismaService, useValue: prismaMock }
+      ],
     }).compile();
 
+    prisma = module.get<PrismaService>(PrismaService);
     service = module.get<ProfilePicturesService>(ProfilePicturesService);
   });
 
