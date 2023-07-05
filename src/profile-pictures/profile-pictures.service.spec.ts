@@ -28,7 +28,7 @@ const InMemoryProfilePictures: Array<ProfilePicture> = [
 ]
 
 const prismaMock = {
-  levelState: {
+  profilePicture: {
     create: jest.fn(({ data }: { data: CreateProfilePictureDto }) => {
       const { title, url } = data;
       InMemoryProfilePictures.push({ id: crypto.randomUUID(), title, url });
@@ -59,6 +59,29 @@ describe('ProfilePicturesService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(prisma).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a new profile-picture and return it', async () => {
+      const oldArraySize = InMemoryProfilePictures.length;
+
+      const newProfilePicture: CreateProfilePictureDto = {
+        title: 'Aquinas',
+        url: 'http://boolestation.com/aquinas.png'
+      }
+
+      const createdProfilePicture = await service.create(newProfilePicture);
+
+      expect(createdProfilePicture).toBeDefined();
+      expect(createdProfilePicture.id).toBeDefined();
+      expect(createdProfilePicture.title).toEqual(newProfilePicture.title);
+      expect(createdProfilePicture.url).toEqual(newProfilePicture.url);
+
+      expect(prisma.profilePicture.create).toHaveBeenCalledTimes(1);
+      expect(prisma.profilePicture.create).toHaveBeenCalledWith({ data: { ...newProfilePicture } });
+
+      expect(InMemoryProfilePictures.length).toBeGreaterThan(oldArraySize);
+    });
   });
 
 });
