@@ -21,14 +21,14 @@ export class ProfilePicturesController {
     return this.profilePicturesService.findOne(id);
   }
 
-  /*
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
-      return this.profilePicturesService.update(+id, updateProfilePictureDto);
-    }
-  
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-      return this.profilePicturesService.remove(+id);
-    }*/
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
+    return this.profilePicturesService.update(id, updateProfilePictureDto);
+  }
+
+  /*  
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.profilePicturesService.remove(+id);
+  }*/
 }
