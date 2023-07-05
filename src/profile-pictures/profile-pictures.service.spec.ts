@@ -82,6 +82,23 @@ describe('ProfilePicturesService', () => {
 
       expect(InMemoryProfilePictures.length).toBeGreaterThan(oldArraySize);
     });
+
+    it('should throw an error if the level state creation fails', async () => {
+      const oldArraySize = InMemoryProfilePictures.length;
+
+      const newProfilePicture: CreateProfilePictureDto = {
+        title: 'Aquinas',
+        url: 'http://boolestation.com/aquinas.png'
+      }
+
+      jest.spyOn(prisma.profilePicture, 'create').mockRejectedValueOnce(new Error('Failed to create level state'));
+
+      await expect(service.create(newProfilePicture)).rejects.toThrowError('Failed to create level state');
+      expect(prisma.profilePicture.create).toHaveBeenCalledTimes(2);
+      expect(prisma.profilePicture.create).toHaveBeenCalledWith({ data: { ...newProfilePicture } });
+      expect(InMemoryProfilePictures.length).not.toBeGreaterThan(oldArraySize);
+    });
+
   });
 
 });
