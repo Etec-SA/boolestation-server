@@ -26,9 +26,8 @@ export class ProfilePicturesController {
     return this.profilePicturesService.update(id, updateProfilePictureDto);
   }
 
-  /*  
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.profilePicturesService.remove(+id);
-  }*/
+    return this.profilePicturesService.remove(id);
+  }
 }
