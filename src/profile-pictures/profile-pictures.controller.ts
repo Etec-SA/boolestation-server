@@ -5,7 +5,7 @@ import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 
 @Controller('profile-pictures')
 export class ProfilePicturesController {
-  constructor(private readonly profilePicturesService: ProfilePicturesService) {}
+  constructor(private readonly profilePicturesService: ProfilePicturesService) { }
 
   @Post()
   create(@Body() createProfilePictureDto: CreateProfilePictureDto) {
@@ -16,19 +16,19 @@ export class ProfilePicturesController {
   findAll() {
     return this.profilePicturesService.findAll();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profilePicturesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
-    return this.profilePicturesService.update(+id, updateProfilePictureDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profilePicturesService.remove(+id);
-  }
+  /*
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+      return this.profilePicturesService.findOne(+id);
+    }
+  
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
+      return this.profilePicturesService.update(+id, updateProfilePictureDto);
+    }
+  
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+      return this.profilePicturesService.remove(+id);
+    }*/
 }
