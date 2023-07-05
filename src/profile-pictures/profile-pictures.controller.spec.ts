@@ -146,4 +146,48 @@ describe('ProfilePicturesController', () => {
       expect(controller.create(body)).rejects.toThrowError();
     });
   });
+
+  describe('update', () => {
+    it('should update a profile picture', async () => {
+      const body: UpdateProfilePictureDto = {
+        title: 'O Modalista',
+        url: 'themodalist.com/picture.png'
+      }
+
+      const existingProfilePicture = InMemoryProfilePictures[0];
+
+      const result = await controller.update(existingProfilePicture.id, body);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(InMemoryProfilePictures[0]);
+      expect(service.update).toHaveBeenCalledTimes(1);
+      expect(service.update).toHaveBeenCalledWith(existingProfilePicture.id, body);
+    });
+
+    it('should return undefined when not find profile picture', async () => {
+
+      const body: UpdateProfilePictureDto = {
+        title: 'O Modalista',
+        url: 'themodalist.com/picture.png'
+      }
+
+      jest.spyOn(service, 'update').mockResolvedValueOnce(undefined);
+      const result = await controller.update('not-a-valid-id', body);
+
+      expect(result).toBeUndefined();
+      expect(service.update).toHaveBeenCalledTimes(1);
+      expect(service.update).toHaveBeenCalledWith('not-a-valid-id', body);
+    });
+
+    it('should throw an exception', () => {
+      const body: UpdateProfilePictureDto = {
+        title: 'O Modalista',
+        url: 'themodalist.com/picture.png'
+      }
+
+      jest.spyOn(service, 'update').mockRejectedValueOnce(new Error());
+
+      expect(controller.update('some-id', body)).rejects.toThrowError();
+    });
+  });
 });
