@@ -4,8 +4,6 @@ import { ProfilePicturesService } from './profile-pictures.service';
 import { ProfilePicture } from '@prisma/client';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
-import { NotFoundException } from '@nestjs/common';
-
 
 const InMemoryProfilePictures: Array<ProfilePicture> = [
   {
