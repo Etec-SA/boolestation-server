@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { ProfilePicturesModule } from '../src/profile-pictures/profile-pictures.module';
 import { ProfilePicture } from '@prisma/client';
 import * as profilePicturesJson from './fixtures/profile-pictures';
+import { CreateProfilePictureDto } from 'src/profile-pictures/dto/create-profile-picture.dto';
 
 let findedProfilePicture: ProfilePicture;
 let createdProfilePicture: ProfilePicture;
@@ -50,6 +51,41 @@ describe('AppController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
+    });
+  });
+
+  describe('/profile-pictures/ (POST)', () => {
+    it('should create a new profile picture', async () => {
+      let newProfilePicture: CreateProfilePictureDto = {
+        title: 'Kant',
+        url: 'http://kant.pru/image.png'
+      }
+
+
+      let response = await request(app.getHttpServer())
+        .post('/profile-pictures')
+        .send(newProfilePicture);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(201);
+      expect(response.body.title).toEqual(newProfilePicture.title);
+      expect(response.body.url).toEqual(newProfilePicture.url);
+
+      createdProfilePicture = response.body;
+    });
+
+    it('should return status code 400', async () => {
+      let newProfilePicture = {
+        title: 'I only have a title'
+      }
+
+
+      let response = await request(app.getHttpServer())
+        .post('/profile-pictures')
+        .send(newProfilePicture);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(400);
     });
   });
 });
