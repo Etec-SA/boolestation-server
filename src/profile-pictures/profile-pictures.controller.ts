@@ -2,13 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProfilePicturesService } from './profile-pictures.service';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ProfilePictureEntity } from './entities/profile-picture.entity';
 
 @ApiTags('profile-pictures')
 @Controller('profile-pictures')
 export class ProfilePicturesController {
   constructor(private readonly profilePicturesService: ProfilePicturesService) { }
 
+  @ApiCreatedResponse({type: ProfilePictureEntity})
   @Post()
   create(@Body() createProfilePictureDto: CreateProfilePictureDto) {
     return this.profilePicturesService.create(createProfilePictureDto);

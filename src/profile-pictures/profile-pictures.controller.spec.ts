@@ -1,9 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfilePicturesController } from './profile-pictures.controller';
 import { ProfilePicturesService } from './profile-pictures.service';
-import { ProfilePicture } from '@prisma/client';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
+
+
+interface ProfilePicture {
+  id: string;
+  title: string;
+  url: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const InMemoryProfilePictures: Array<ProfilePicture> = [
   {
@@ -193,7 +201,7 @@ describe('ProfilePicturesController', () => {
     it('should remove an existing profile picture', async () => {
       const existingProfilePictureId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
 
-      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingProfilePictureId as unknown as ProfilePicture);
+      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingProfilePictureId as any);
 
       const result = await controller.remove(existingProfilePictureId);
 

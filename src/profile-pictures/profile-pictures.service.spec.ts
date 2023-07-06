@@ -1,10 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProfilePicture } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { ProfilePicturesService } from './profile-pictures.service';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 import { NotFoundException } from '@nestjs/common';
+
+interface ProfilePicture {
+  id: string;
+  title: string;
+  url: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 
 const InMemoryProfilePictures: Array<ProfilePicture> = [
   {
@@ -153,7 +161,7 @@ describe('ProfilePicturesService', () => {
         url: 'http://bool.com.br/aristoteles'
       };
 
-      jest.spyOn(prisma.profilePicture, 'update').mockResolvedValueOnce(updatedProfilePicture);
+      jest.spyOn(prisma.profilePicture, 'update').mockResolvedValueOnce(updatedProfilePicture as any);
 
       const result = await service.update(existingProfilePicture.id, updatedProfilePictureData);
 
@@ -207,7 +215,7 @@ describe('ProfilePicturesService', () => {
     it('should remove an existing profile picture', async () => {
       const existingProfilePictureId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
 
-      jest.spyOn(prisma.profilePicture, 'delete').mockResolvedValueOnce(existingProfilePictureId as unknown as ProfilePicture);
+      jest.spyOn(prisma.profilePicture, 'delete').mockResolvedValueOnce(existingProfilePictureId as any);
 
       const result = await service.remove(existingProfilePictureId);
 
