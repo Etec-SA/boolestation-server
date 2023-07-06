@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { ProfilePicturesModule } from 'src/profile-pictures/profile-pictures.module';
 import { ProfilePicture } from '@prisma/client';
+import * as profilePicturesJson from './fixtures/profile-pictures';
 
 let findedProfilePicture: ProfilePicture;
 let createdProfilePicture: ProfilePicture;
@@ -17,5 +18,16 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
+  });
+
+  describe('/profile-pictures (GET)', () => {
+    it('should get all profile pictures', async () => {
+      let response = await request(app.getHttpServer()).get('/profile-pictures');
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(typeof response.body).toEqual(typeof profilePicturesJson.data);
+      findedProfilePicture = response.body[0];
+    });
   });
 });
