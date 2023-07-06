@@ -3,7 +3,6 @@ import { LevelStatesController } from './level-states.controller';
 import { LevelStatesService } from './level-states.service';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
-import { NotFoundException } from '@nestjs/common';
 
 interface LevelState {
   id: string;
