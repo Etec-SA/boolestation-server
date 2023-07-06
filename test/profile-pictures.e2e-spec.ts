@@ -129,4 +129,21 @@ describe('AppController (e2e)', () => {
       createdProfilePicture.url = 'baaar';
     });
   });
+
+  describe('/profile-pictures/:id (DELETE)', () => {
+    it('/profile-pictures/:id (DELETE)', async () => {
+      let response = await request(app.getHttpServer())
+        .delete(`/profile-pictures/${createdProfilePicture.id}`);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(createdProfilePicture);
+
+      response = await request(app.getHttpServer())
+        .get(`/profile-pictures/${createdProfilePicture.id}`);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(404);
+    });
+  });
 });
