@@ -21,6 +21,8 @@ model User {
   xp               Int            @default(0)
   profilePicture   ProfilePicture @relation(fields: [profilePictureId], references: [id])
   levelState       LevelState     @relation(fields: [levelStateId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
   @@map("users")
 }
@@ -31,6 +33,8 @@ model Module {
   slug        String
   description String
   lessons     Lesson[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("modules")
 }
@@ -43,6 +47,8 @@ model Lesson {
   moduleId  String
   module    Module     @relation(fields: [moduleId], references: [id])
   exercises Exercise[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@map("lessons")
 }
@@ -54,6 +60,8 @@ model Exercise {
   lessonId     String
   lesson       Lesson        @relation(fields: [lessonId], references: [id])
   alternatives Alternative[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("exercises")
 }
@@ -64,24 +72,30 @@ model Alternative {
   isCorrect  Boolean
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("alternatives")
 }
 
 model LevelState {
-  id         String @id @default(uuid())
+  id         String   @id @default(uuid())
   title      String
   requiredXp Int
   users      User[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("level_states")
 }
 
 model ProfilePicture {
-  id    String @id @default(uuid())
-  title String
-  url   String
-  users User[]
+  id        String   @id @default(uuid())
+  title     String
+  url       String
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("profile_pictures")
 }
