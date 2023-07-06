@@ -16,6 +16,7 @@ model User {
   profilePictureId String
   username         String
   name             String
+  email            String
   password         String
   birthdate        DateTime
   isPremium        Boolean        @default(false)
