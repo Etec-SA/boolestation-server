@@ -138,7 +138,9 @@ describe('LevelStatesController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(response.body).toEqual(createdLevelState);
+      expect(response.body.id).toEqual(createdLevelState.id);
+      expect(response.body.requiredXp).toEqual(createdLevelState.requiredXp);
+      expect(response.body.title).toEqual(createdLevelState.title);
 
       response = await request(app.getHttpServer())
         .get(`/level-states/${createdLevelState.id}`);

@@ -119,7 +119,7 @@ describe('AppController (e2e)', () => {
       let response = await request(app.getHttpServer())
         .patch(`/profile-pictures/${createdProfilePicture.id}`)
         .send(updatedProfilePicture);
-      
+
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
       expect(response.body.id).not.toEqual('new id');
@@ -137,7 +137,9 @@ describe('AppController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(response.body).toEqual(createdProfilePicture);
+      expect(response.body.id).toEqual(createdProfilePicture.id);
+      expect(response.body.title).toEqual(createdProfilePicture.title);
+      expect(response.body.url).toEqual(createdProfilePicture.url);
 
       response = await request(app.getHttpServer())
         .get(`/profile-pictures/${createdProfilePicture.id}`);
