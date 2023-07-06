@@ -5,6 +5,7 @@ import { ProfilePicturesModule } from '../src/profile-pictures/profile-pictures.
 import { ProfilePicture } from '@prisma/client';
 import * as profilePicturesJson from './fixtures/profile-pictures';
 import { CreateProfilePictureDto } from 'src/profile-pictures/dto/create-profile-picture.dto';
+import { UpdateProfilePictureDto } from 'src/profile-pictures/dto/update-profile-picture.dto';
 
 let findedProfilePicture: ProfilePicture;
 let createdProfilePicture: ProfilePicture;
@@ -86,6 +87,46 @@ describe('AppController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(400);
+    });
+  });
+
+  describe('/profile-pictures/:id (PATCH)', () => {
+    it('should update a profile picture', async () => {
+      let updatedProfilePicture: UpdateProfilePictureDto = {
+        title: 'foo',
+        url: 'bar'
+      }
+
+      let response = await request(app.getHttpServer())
+        .patch(`/profile-pictures/${createdProfilePicture.id}`)
+        .send(updatedProfilePicture);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.title).toEqual(updatedProfilePicture.title);
+      expect(response.body.url).toEqual(updatedProfilePicture.url);
+
+      createdProfilePicture = response.body;
+    });
+
+    it('should change only valid fields', async () => {
+      let updatedProfilePicture = {
+        id: 'new id',
+        invalidField: true,
+        url: 'baaar'
+      }
+
+      let response = await request(app.getHttpServer())
+        .patch(`/profile-pictures/${createdProfilePicture.id}`)
+        .send(updatedProfilePicture);
+      
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.id).not.toEqual('new id');
+      expect(response.body?.invalidField).toBeUndefined();
+      expect(response.body.url).toEqual('baaar');
+
+      createdProfilePicture.url = 'baaar';
     });
   });
 });
