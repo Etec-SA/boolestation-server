@@ -56,7 +56,7 @@ describe('LevelStatesController (e2e)', () => {
     });
   });
 
-  describe('/level-states/:id (POST)', () => {
+  describe('/level-states/(POST)', () => {
     it('should create a new level state', async () => {
       let newLevelState: CreateLevelStateDto = {
         title: 'O Novo Aprendiz',
@@ -90,6 +90,7 @@ describe('LevelStatesController (e2e)', () => {
       expect(response.status).toEqual(400);
     });
   });
+
   describe('/level-states/:id (PATCH)', () => {
     it('should update a level state', async () => {
       let updatedLevelState: UpdateLevelStateDto = {

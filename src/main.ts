@@ -11,6 +11,7 @@ async function bootstrap() {
     .setDescription('Server application of Boolestation')
     .setVersion('1.0')
     .addTag('level-states')
+    .addTag('profile-pictures')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

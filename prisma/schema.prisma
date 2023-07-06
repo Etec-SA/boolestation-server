@@ -31,6 +31,7 @@ model Module {
   slug        String
   description String
   lessons     Lesson[]
+
   @@map("modules")
 }
 
@@ -47,11 +48,11 @@ model Lesson {
 }
 
 model Exercise {
-  id          String        @id @default(uuid())
-  title       String
-  description String
-  lessonId    String
-  lesson      Lesson        @relation(fields: [lessonId], references: [id])
+  id           String        @id @default(uuid())
+  title        String
+  description  String
+  lessonId     String
+  lesson       Lesson        @relation(fields: [lessonId], references: [id])
   alternatives Alternative[]
 
   @@map("exercises")
@@ -63,6 +64,7 @@ model Alternative {
   isCorrect  Boolean
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
+
   @@map("alternatives")
 }
 
@@ -77,6 +79,7 @@ model LevelState {
 
 model ProfilePicture {
   id    String @id @default(uuid())
+  title String
   url   String
   users User[]
 
