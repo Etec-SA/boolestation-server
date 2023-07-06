@@ -1,10 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LevelStatesController } from './level-states.controller';
 import { LevelStatesService } from './level-states.service';
-import { LevelState } from '@prisma/client';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
 import { NotFoundException } from '@nestjs/common';
+
+interface LevelState {
+  id: string;
+  title: string;
+  requiredXp: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const InMemoryLevelStates: Array<LevelState> = [
   {
@@ -106,8 +113,8 @@ describe('LevelStatesController', () => {
     });
 
     it('should return undefined when not find level state', async () => {
-        const result = await controller.findOne('invalid-id');
-        expect(result).toBeUndefined();
+      const result = await controller.findOne('invalid-id');
+      expect(result).toBeUndefined();
     });
 
     it('should throw an exception', () => {
@@ -192,7 +199,7 @@ describe('LevelStatesController', () => {
     it('should remove an existing level state', async () => {
       const existingLevelStateId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
 
-      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingLevelStateId as unknown as LevelState);
+      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingLevelStateId as any);
 
       const result = await controller.remove(existingLevelStateId);
 
