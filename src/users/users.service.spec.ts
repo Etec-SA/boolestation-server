@@ -7,7 +7,12 @@ import * as bcrypt from 'bcrypt';
 const prismaMock = {
   user: {
     create: jest.fn((data: CreateUserDto) => {
-      return { ...data, id: crypto.randomUUID() };
+      return { 
+        ...data, 
+        id: crypto.randomUUID(),
+        xp: 0,
+        isPremium: false
+      };
     })
   },
   profilePicture: {
@@ -57,6 +62,10 @@ describe('UsersService', () => {
       expect(response).toBeDefined();
       expect(response.id).toBeDefined();
       expect(response?.password).toBeUndefined();
+      expect(response.xp).toBe(0);
+      expect(response.isPremium).toBe(false);
+      expect(prisma.user.create).toHaveBeenCalledTimes(1);
+      expect(bcrypt.hash).toHaveBeenCalledTimes(1);
     })
   })
 });
