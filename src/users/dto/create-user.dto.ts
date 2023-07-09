@@ -22,7 +22,6 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty({ example: '1985-07-15', description: 'User birthdate' })
-  @IsNotEmpty()
   @IsDate()
   birthdate: Date;
 }
