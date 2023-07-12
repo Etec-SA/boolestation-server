@@ -10,16 +10,25 @@ export class UsersService {
   constructor(private prisma: PrismaService) { }
   async create(createUserDto: CreateUserDto) {
 
-    const emailIsInUse = await this.prisma.user.findFirst({
+    const userExists = await this.prisma.user.findFirst({
       where: {
-        email: createUserDto.email
+        OR: [
+          { email: createUserDto.email },
+          { username: createUserDto.username }
+        ]
       },
       select: {
-        email: true
+        email: true,
+        username: true
       }
     });
 
-    if (emailIsInUse) throw new BadRequestException('Email is already in use.');
+    if (userExists) {
+      console.log(userExists.email);
+      console.log(createUserDto.email);
+      let message = userExists.email == createUserDto.email ? 'Email' : 'Username';
+      throw new BadRequestException(`${message} is already in use.`);
+    }
 
     const levelStateId = await this.prisma.levelState.findFirst({
       select: {
