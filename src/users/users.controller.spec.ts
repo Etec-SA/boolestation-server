@@ -24,6 +24,7 @@ const serviceMock = {
 
 describe('UsersController', () => {
   let controller: UsersController;
+  let service: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,15 +35,17 @@ describe('UsersController', () => {
       }],
     }).compile();
 
+    service = module.get<UsersService>(UsersService);
     controller = module.get<UsersController>(UsersController);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
-  describe('create', ()=>{
-    it('should create an user with success', async ()=>{
+  describe('create', () => {
+    it('should create an user with success', async () => {
       const response: User = await controller.create({
         name: 'Luca Poe',
         birthdate: new Date('2006-01-19'),
@@ -53,6 +56,10 @@ describe('UsersController', () => {
 
       expect(response).toBeDefined();
       expect(response?.password).toBeUndefined();
-    })
+    });
+
+    it('should return an error if email is already in use', async () => {
+      jest.spyOn()
+    });
   });
 });
