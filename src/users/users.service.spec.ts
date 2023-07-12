@@ -90,12 +90,40 @@ describe('UsersService', () => {
         username: 'boolgeorge'
       };
 
+      jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce({
+        username: 'boolgeorge2',
+        email: 'george@bool.com'
+      } as User);
+
       try {
         await service.create(user);
       } catch (e) {
         expect(e).toBeInstanceOf(BadRequestException);
+        expect(e.message).toEqual('Email is already in use.');
+
       }
     });
 
+    it('should throw an exception if username is already in use', async () => {
+      const user: CreateUserDto = {
+        birthdate: new Date('1985-10-10'),
+        name: 'Bool George',
+        email: 'george@boolean.com',
+        password: '123321',
+        username: 'georgebool'
+      };
+
+      jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce({
+        username: 'georgebool',
+        email: 'georgebool@gmail.com'
+      } as User);
+
+      try {
+        await service.create(user);
+      } catch (e) {
+        expect(e).toBeInstanceOf(BadRequestException);
+        expect(e.message).toEqual('Username is already in use.');
+      }
+    });
   });
 });
