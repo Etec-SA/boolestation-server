@@ -60,5 +60,24 @@ describe('Users (e2e)', () => {
       expect((response as any).message).toEqual('Email is already in use.');
     });
 
+    it('should rejects the creation if username is already in use', async () => {
+      let newUser: CreateUserDto = {
+        name: "Hector Vieira Saldivar Júnior",
+        username: createdUser.username,
+        email: "hvs@booleano.com",
+        password: "supaguitar12122",
+        birthdate: new Date("2013-11-11")
+      }
+
+      let response = await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(400);
+      expect(response.error).toEqual('Bad Request');
+      expect((response as any).message).toEqual('Username is already in use.');
+    });
+
   });
 });
