@@ -24,8 +24,6 @@ export class UsersService {
     });
 
     if (userExists) {
-      console.log(userExists.email);
-      console.log(createUserDto.email);
       let message = userExists.email == createUserDto.email ? 'Email' : 'Username';
       throw new BadRequestException(`${message} is already in use.`);
     }
