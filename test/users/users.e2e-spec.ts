@@ -56,8 +56,8 @@ describe('Users (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(400);
-      expect(response.error).toEqual('Bad Request');
-      expect((response as any).message).toEqual('Email is already in use.');
+      expect(response.body.error).toEqual('Bad Request');
+      expect(response.body.message).toEqual('Email is already in use.');
     });
 
     it('should rejects the creation if username is already in use', async () => {
@@ -75,8 +75,8 @@ describe('Users (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(400);
-      expect(response.error).toEqual('Bad Request');
-      expect((response as any).message).toEqual('Username is already in use.');
+      expect(response.body.error).toEqual('Bad Request');
+      expect(response.body.message).toEqual('Username is already in use.');
     });
 
   });
