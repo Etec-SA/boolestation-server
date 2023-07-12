@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,6 +9,18 @@ import { Prisma } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) { }
   async create(createUserDto: CreateUserDto) {
+
+    const emailIsInUse = await this.prisma.user.findFirst({
+      where: {
+        email: createUserDto.email
+      },
+      select: {
+        email: true
+      }
+    });
+
+    if (emailIsInUse) throw new BadRequestException('Email is already in use.');
+
     const levelStateId = await this.prisma.levelState.findFirst({
       select: {
         id: true
@@ -19,7 +31,7 @@ export class UsersService {
     });
 
     const profilePictureId = await this.prisma.profilePicture.findFirst({
-      select: {id: true},
+      select: { id: true },
       orderBy: {
         createdAt: 'asc'
       }
@@ -36,8 +48,8 @@ export class UsersService {
       }
     };
 
-    const result = await this.prisma.user.create({data: user});
-    
+    const result = await this.prisma.user.create({ data: user });
+
     return {
       ...result,
       password: undefined
