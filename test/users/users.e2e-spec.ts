@@ -20,25 +20,45 @@ describe('Users (e2e)', () => {
     await app.init();
   });
 
-  it('should create a new user', async () => {
-    let newUser: CreateUserDto = {
-      name: "Hector Vieira",
-      username: "hvs",
-      email: "gregorioborges@gmail.com",
-      password: "sUpAgu1t4r_13",
-      birthdate: new Date("2002-11-11")
-    }
+  describe('/users (POST)', () => {
+    it('should create a new user', async () => {
+      let newUser: CreateUserDto = {
+        name: "Hector Vieira Saldivar",
+        username: "hectorguitar032",
+        email: "hvs@gmail.com",
+        password: "sUpAgu1t4r_13",
+        birthdate: new Date("2002-11-11")
+      }
 
-    let response = await request(app.getHttpServer())
-      .post('/users')
-      .send(newUser);
-    console.log(response.body);
-    expect(response).toBeDefined();
-    expect(response.status).toEqual(201);
-    expect(response.body?.password).toBeUndefined();
-    expect(response.body.id).toBeDefined();
-    createdUser = response.body;
+      let response = await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(201);
+      expect(response.body?.password).toBeUndefined();
+      expect(response.body.id).toBeDefined();
+      createdUser = response.body;
+    });
+
+    it('should rejects the creation if email is already in use', async () => {
+      let newUser: CreateUserDto = {
+        name: "Hector Vieira Saldivar Júnior",
+        username: "juninho13",
+        email: createdUser.email,
+        password: "supaguitar12122",
+        birthdate: new Date("2013-11-11")
+      }
+
+      let response = await request(app.getHttpServer())
+        .post('/users')
+        .send(newUser);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(400);
+      expect(response.error).toEqual('Bad Request');
+      expect((response as any).message).toEqual('Email is already in use.');
+    });
+
   });
-
-
 });
