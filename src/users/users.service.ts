@@ -76,6 +76,10 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    return await this.prisma.user.delete({ where: { id } });
+    let response = await this.prisma.user.delete({ where: { id } });
+    return {
+      ...response,
+      password: undefined
+    }
   }
 }
