@@ -6,6 +6,7 @@ import { CreateUserDto } from "../../src/users/dto/create-user.dto";
 import * as request from 'supertest';
 
 let createdUser: Partial<User>;
+let findedUser: User;
 
 let app: INestApplication;
 
@@ -80,6 +81,29 @@ describe('Users (e2e)', () => {
     });
 
   });
+
+  describe('/users/:id (GET)', ()=>{
+    it('should get a single user', async () => {
+      const id = createdUser.id;
+
+      let response = await request(app.getHttpServer())
+        .get(`/users/${id}`);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      delete response.body.password; //change to findedUser later
+      expect(response.body).toEqual(createdUser);
+    });
+
+    it('should return a 404', async () => {
+
+      let response = await request(app.getHttpServer())
+        .get(`/users/eusimplesmentenaoexisto`);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(404);
+    });
+  })
 
   describe('/users/:id (DELETE)', ()=>{
     it('should remove an user with success', async () => {
