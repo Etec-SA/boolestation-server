@@ -1,9 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
+
+import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 @Injectable()
 export class UsersService {
@@ -46,6 +50,7 @@ export class UsersService {
 
     const user: Prisma.UserCreateInput = {
       ...createUserDto,
+      birthdate: dayjs(createUserDto.birthdate).utc().format(),
       password: await bcrypt.hash(createUserDto.password, 10),
       levelState: {
         connect: levelStateId
@@ -67,8 +72,16 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id
+      }
+    });
+    
+    if (!user) throw new NotFoundException('User Not Found');
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
