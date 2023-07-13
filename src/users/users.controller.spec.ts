@@ -20,7 +20,8 @@ const serviceMock = {
       password: undefined
     }
     return user;
-  })
+  }),
+  remove: jest.fn()
 }
 
 describe('UsersController', () => {
@@ -111,7 +112,7 @@ describe('UsersController', () => {
       jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error('user not found'));
 
       await expect(controller.remove(nonExistingUserId)).rejects.toThrowError('user not found');
-      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledTimes(2);
       expect(service.remove).toHaveBeenCalledWith(nonExistingUserId);
     });
 
