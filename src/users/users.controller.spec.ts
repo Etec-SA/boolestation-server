@@ -91,4 +91,36 @@ describe('UsersController', () => {
       }
     });
   });
+
+  describe('delete', () => {
+    it('should remove an existing user', async () => {
+      const existingUserId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
+
+      jest.spyOn(service, 'remove').mockResolvedValueOnce(existingUserId as any);
+
+      const result = await controller.remove(existingUserId);
+
+      expect(result).toEqual(existingUserId);
+      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledWith(existingUserId);
+    });
+
+    it('should throw an error if the user to remove does not exist', async () => {
+      const nonExistingUserId = 'non-existing-id';
+
+      jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error('user not found'));
+
+      await expect(controller.remove(nonExistingUserId)).rejects.toThrowError('user not found');
+      expect(service.remove).toHaveBeenCalledTimes(1);
+      expect(service.remove).toHaveBeenCalledWith(nonExistingUserId);
+    });
+
+    it('should throw an exception', () => {
+
+      jest.spyOn(service, 'remove').mockRejectedValueOnce(new Error());
+
+      expect(controller.remove('some-id')).rejects.toThrowError();
+
+    });
+  });
 });
