@@ -24,7 +24,8 @@ const prismaMock = {
         password: 'user',
         birthdate: new Date('0000-00-00')
       }
-    })
+    }),
+    delete: jest.fn()
   },
   profilePicture: {
     findFirst: jest.fn().mockResolvedValue(crypto.randomUUID())
@@ -125,5 +126,30 @@ describe('UsersService', () => {
         expect(e.message).toEqual('Username is already in use.');
       }
     });
+  });
+
+  describe('remove', () => {
+    it('should remove an existing user', async () => {
+      const existingUserId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
+
+      jest.spyOn(prisma.user, 'delete').mockResolvedValueOnce(existingUserId as any);
+
+      const result = await service.remove(existingUserId);
+
+      expect(result).toEqual(existingUserId);
+      expect(prisma.user.delete).toHaveBeenCalledTimes(1);
+      expect(prisma.user.delete).toHaveBeenCalledWith({ where: { id: existingUserId } });
+    });
+
+    it('should throw an error if the user to remove does not exist', async () => {
+      const nonExistingUserId = 'non-existing-id';
+
+      jest.spyOn(prisma.user, 'delete').mockRejectedValue(new Error('profile picture not found'));
+
+      await expect(service.remove(nonExistingUserId)).rejects.toThrowError('profile picture not found');
+      expect(prisma.user.delete).toHaveBeenCalledTimes(2);
+      expect(prisma.user.delete).toHaveBeenCalledWith({ where: { id: nonExistingUserId } });
+    });
+
   });
 });
