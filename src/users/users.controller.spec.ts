@@ -21,7 +21,14 @@ const serviceMock = {
     }
     return user;
   }),
-  remove: jest.fn()
+  remove: jest.fn(),
+  findOne: jest.fn().mockResolvedValue({
+    name: 'user',
+    username: 'user',
+    email: 'user@email.com',
+    password: 'user',
+    birthdate: new Date('')
+  })
 }
 
 describe('UsersController', () => {
@@ -90,6 +97,29 @@ describe('UsersController', () => {
         expect(e).toBeInstanceOf(BadRequestException);
         expect(e.message).toEqual('Username is already in use.');
       }
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return an individual user', async () => {
+      const result = await controller.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+      const expected =  JSON.stringify({
+        name: 'user',
+        username: 'user',
+        email: 'user@email.com',
+        password: 'user',
+        birthdate: new Date('')
+      });
+
+      expect(JSON.stringify(result)).toEqual(expected);
+      expect(service.findOne).toHaveBeenCalledTimes(1);
+      expect(service.findOne).toHaveBeenCalledWith('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+    });
+
+    it('should throw an exception', () => {
+      jest.spyOn(service, 'findOne').mockRejectedValueOnce(new Error());
+
+      expect(controller.findOne('some-id')).rejects.toThrowError();
     });
   });
 
