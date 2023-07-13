@@ -80,4 +80,22 @@ describe('Users (e2e)', () => {
     });
 
   });
+
+  describe('/users/:id (DELETE)', ()=>{
+    it('should remove an user with success', async () => {
+      let response = await request(app.getHttpServer())
+        .delete(`/users/${createdUser.id}`);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.id).toEqual(createdUser.id);
+      expect(response.body?.password).toBeUndefined();
+
+      response = await request(app.getHttpServer())
+        .get(`/users/${createdUser.id}`);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(404);
+    });
+  });
 });
