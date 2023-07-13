@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from '../database/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 const prismaMock = {
   user: {
@@ -22,7 +22,7 @@ const prismaMock = {
         username: 'user',
         email: 'user@email.com',
         password: 'user',
-        birthdate: new Date('0000-00-00')
+        birthdate: new Date('')
       }
     }),
     delete: jest.fn()
@@ -128,15 +128,50 @@ describe('UsersService', () => {
     });
   });
 
+  describe('findOne', () => {
+    it('should return a single user', async () => {
+      const response = await service.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+      const expected = JSON.stringify({
+        name: 'user',
+        username: 'user',
+        email: 'user@email.com',
+        password: 'user',
+        birthdate: new Date('0000-00-00')
+      });
+
+      expect(JSON.stringify(response)).toEqual(expected);
+      expect(prisma.user.findFirst).toHaveBeenCalledTimes(4);
+      expect(prisma.user.findFirst).toHaveBeenCalledWith({
+        where: { id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e' },
+      });
+    });
+
+    it(`should return an exception when user is not found`, async () => {
+      jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(undefined);
+      
+      try {
+        await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+        expect(prisma.user.findFirst).toHaveBeenCalledTimes(5);
+        expect(prisma.user.findFirst).toHaveBeenCalledWith({
+          where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
+        });
+      }
+      
+    });
+  });
+
   describe('remove', () => {
     it('should remove an existing user', async () => {
       const existingUserId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
 
-      jest.spyOn(prisma.user, 'delete').mockResolvedValueOnce(existingUserId as any);
+      jest.spyOn(prisma.user, 'delete').mockResolvedValueOnce({id: existingUserId} as any);
 
       const result = await service.remove(existingUserId);
 
-      expect(result).toEqual(existingUserId);
+      expect(result.id).toEqual(existingUserId);
+      expect(result?.password).toBeUndefined();
       expect(prisma.user.delete).toHaveBeenCalledTimes(1);
       expect(prisma.user.delete).toHaveBeenCalledWith({ where: { id: existingUserId } });
     });
