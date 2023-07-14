@@ -5,6 +5,7 @@ import { PrismaService } from '../database/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 const prismaMock = {
   user: {
@@ -34,7 +35,16 @@ const prismaMock = {
         birthdate: new Date('')
       }
     ]),
-    delete: jest.fn()
+    delete: jest.fn(),
+    update: jest.fn(()=>{
+      return {
+        name: 'userUpdated',
+        username: 'user',
+        email: 'user@email.com',
+        password: 'user',
+        birthdate: new Date('')
+      }
+    })
   },
   profilePicture: {
     findFirst: jest.fn().mockResolvedValue(crypto.randomUUID())
@@ -153,6 +163,34 @@ describe('UsersService', () => {
         expect(e).toBeInstanceOf(BadRequestException);
         expect(e.message).toEqual('Username is already in use.');
       }
+    });
+  });
+
+  describe('update', ()=>{
+    it('should update an user with success', async ()=>{
+      jest.spyOn(service, 'verifyUniqueProperty').mockResolvedValueOnce(undefined);
+      const update: UpdateUserDto = {
+        name: 'userUpdated'
+      };
+
+      const response = await service.update('id', update);
+      expect(response).toBeDefined();
+      expect(response?.password).toBeUndefined();
+    });
+
+    it('should throw an exception if email or username is already in use', async ()=>{
+      jest.spyOn(service, 'verifyUniqueProperty').mockRejectedValueOnce(new BadRequestException());
+      const update: UpdateUserDto = {
+        name: 'userUpdated'
+      };
+
+      try{
+        await service.update('id', update);
+      }catch(e){
+        expect(e).toBeDefined();
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+
     });
   });
 
