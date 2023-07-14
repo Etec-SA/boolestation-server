@@ -114,7 +114,24 @@ describe('Users (e2e)', () => {
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
     });
-  })
+  });
+
+  describe('/users/:id (PATCH)', ()=>{
+    it('should update an user with success', async ()=>{
+      const id = createdUser.id;
+
+      let response = await request(app.getHttpServer())
+        .patch(`/users/${id}`)
+        .send({username: 'hvs'});
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.id).toEqual(createdUser.id);
+      expect(response.body.username).toEqual('hvs');
+      expect(response.body?.password).toBeUndefined();
+      createdUser = response.body;
+    });
+  });
 
   describe('/users/:id (DELETE)', ()=>{
     it('should remove an user with success', async () => {

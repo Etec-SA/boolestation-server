@@ -77,8 +77,8 @@ export class UsersService {
       throwIfExists: true
     });
 
-    const result = this.prisma.user.update({data, where: { id }});
-
+    const result = await this.prisma.user.update({data, where: { id }});
+    
     return {
       ...result,
       password: undefined
