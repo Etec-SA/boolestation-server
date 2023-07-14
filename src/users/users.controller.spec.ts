@@ -5,6 +5,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 const serviceMock = {
   create: jest.fn((data: CreateUserDto) => {
@@ -33,6 +34,13 @@ const serviceMock = {
   remove: jest.fn(),
   findOne: jest.fn().mockResolvedValue({
     name: 'user',
+    username: 'user',
+    email: 'user@email.com',
+    password: 'user',
+    birthdate: new Date('')
+  }),
+  update: jest.fn().mockResolvedValue({
+    name: 'userUpdated',
     username: 'user',
     email: 'user@email.com',
     password: 'user',
@@ -134,6 +142,37 @@ describe('UsersController', () => {
       }
     });
   });
+
+  describe('update', ()=>{
+    it('should update an user with success', async ()=>{
+      const update: UpdateUserDto = {
+        name: 'userUpdated'
+      };
+
+      const response = await service.update('id', update);
+
+      expect(response).toBeDefined();
+      expect(response?.password).toBeUndefined();
+      expect(service.update).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an exception', async ()=>{
+      jest.spyOn(service, 'update')
+      .mockRejectedValueOnce(new BadRequestException('Email is already in use.'));
+
+      const update: UpdateUserDto = {
+        name: 'userUpdated'
+      };
+      
+      try{
+        await service.update('id', update);
+      }catch(e){
+        expect(e).toBeDefined();
+        expect(e).toBeInstanceOf(BadRequestException);
+      }
+
+    });
+  })
 
   describe('findOne', () => {
     it('should return an individual user', async () => {
