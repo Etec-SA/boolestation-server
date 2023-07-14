@@ -108,6 +108,7 @@ describe('UsersController', () => {
 
       expect(response).toBeDefined();
       expect(response?.password).toBeUndefined();
+      expect(service.create).toBeCalledTimes(1);
     });
 
     it('should return an error if email is already in use', async () => {
