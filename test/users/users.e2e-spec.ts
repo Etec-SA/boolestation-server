@@ -91,7 +91,7 @@ describe('Users (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      delete response.body.password; //change to findedUser later
+      delete response.body.password; //change to findedUser
       expect(response.body).toEqual(createdUser);
     });
 
