@@ -122,14 +122,61 @@ describe('Users (e2e)', () => {
 
       let response = await request(app.getHttpServer())
         .patch(`/users/${id}`)
-        .send({username: 'hvs'});
+        .send({
+          username: 'hvs', 
+          id: "you cant't change it.",
+          invalidField: true
+        });
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
       expect(response.body.id).toEqual(createdUser.id);
       expect(response.body.username).toEqual('hvs');
+      expect(response.body?.invalidField).toBeUndefined();
       expect(response.body?.password).toBeUndefined();
       createdUser = response.body;
+    });
+
+    it('should reject if username is already in use.', async ()=>{
+      const id = createdUser.id;
+
+      let response = await request(app.getHttpServer())
+        .patch(`/users/${id}`)
+        .send({
+          username: 'aristotle', 
+        });
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(400);
+      expect(response.body.error).toEqual('Bad Request');
+      expect(response.body.message).toEqual('Username is already in use.');
+    });
+
+    it('should reject if email is already in use.', async ()=>{
+      const id = createdUser.id;
+
+      let response = await request(app.getHttpServer())
+        .patch(`/users/${id}`)
+        .send({
+          email: 'aristotle@athenas.com', 
+        });
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(400);
+      expect(response.body.error).toEqual('Bad Request');
+      expect(response.body.message).toEqual('Email is already in use.');
+    });
+
+    it('should return 404.', async ()=>{
+      let response = await request(app.getHttpServer())
+        .patch(`/users/212`)
+        .send({
+          email: 'aristotle@athenas.com', 
+        });
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(404);
+      expect(response.body.error).toEqual('Not Found');
     });
   });
 
