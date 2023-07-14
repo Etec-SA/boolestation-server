@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
 import { UsersModule } from "../../src/users/users.module";
+import * as usersJson from '../fixtures/user';
 import { CreateUserDto } from "../../src/users/dto/create-user.dto";
 import * as request from 'supertest';
 
@@ -82,17 +83,27 @@ describe('Users (e2e)', () => {
 
   });
 
+  describe('/users (GET)', ()=>{
+    it('should get all users', async () => {
+      let response = await request(app.getHttpServer()).get('/users');
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(typeof response.body).toEqual(typeof usersJson.data);
+      findedUser = response.body[0];
+    });
+  });
+
   describe('/users/:id (GET)', ()=>{
     it('should get a single user', async () => {
-      const id = createdUser.id;
+      const id = findedUser.id;
 
       let response = await request(app.getHttpServer())
         .get(`/users/${id}`);
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      delete response.body.password; //change to findedUser
-      expect(response.body).toEqual(createdUser);
+      expect(response.body).toEqual(findedUser);
     });
 
     it('should return a 404', async () => {
