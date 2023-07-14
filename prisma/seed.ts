@@ -1,11 +1,13 @@
 import { setupLevelStates } from './seed-setups/level-state.seed';
 import { setupProfilePictures } from './seed-setups/profile-picture.seed';
 import { PrismaClient } from '@prisma/client';
+import { setupUsers } from './seed-setups/user.seed';
 const prisma = new PrismaClient();
 
 async function main() {
   await setupLevelStates();
   await setupProfilePictures();
+  await setupUsers();
 }
 
 main()
