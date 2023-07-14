@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
 
@@ -17,11 +18,11 @@ const setupUsers = async ()=>{
           birthdate: dayjs('1999-11-11').utc().format(),
           levelStateId: '4151e54b-8517-4871-a1d2-acfb67a8bf1a',
           profilePictureId: '4151e54b-8517-4871-a1d2-acfb67a8bf1a',
-          password: 'zonpoNWDNIEONAwqplaźwdqwd-20@(13142',
+          password: await bcrypt.hash('zonpoNWDNIEONAwqplaźwdqwd-20@(13142', 10),
         }
       });
     
-      await prisma.user.upsert({
+    await prisma.user.upsert({
         where: { id: 'af0f6b40-d98d-4a77-a1a1-3fdfff114511' },
         update: {},
         create: {
@@ -32,7 +33,7 @@ const setupUsers = async ()=>{
             birthdate: dayjs('1999-11-11').utc().format(),
             levelStateId: 'af0f6b40-d98d-4a77-a1a1-3fdfff114511',
             profilePictureId: 'af0f6b40-d98d-4a77-a1a1-3fdfff114511',
-            password: 'zonpoNWDNIEONAwqplaźwdqwd-20@(1314sda21342',
+            password: await bcrypt.hash('zonpoNWDNIEONAwqplaźwdqwd-20@(1314sda21342', 10),
           }
       });
 }
