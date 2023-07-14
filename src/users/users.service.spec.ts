@@ -25,6 +25,15 @@ const prismaMock = {
         birthdate: new Date('')
       }
     }),
+    findMany: jest.fn().mockResolvedValue([
+      {
+        name: 'user',
+        username: 'user',
+        email: 'user@email.com',
+        password: 'user',
+        birthdate: new Date('')
+      }
+    ]),
     delete: jest.fn()
   },
   profilePicture: {
@@ -53,6 +62,25 @@ describe('UsersService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(prisma).toBeDefined();
+  });
+
+  describe('findAll', () => {
+    it('should return an array of users', async () => {
+      const expected = JSON.stringify([
+        {
+          name: 'user',
+          username: 'user',
+          email: 'user@email.com',
+          password: 'user',
+          birthdate: new Date('')
+        }
+      ]);
+
+      const response = await service.findAll();
+      expect(JSON.stringify(response)).toEqual(expected);
+      expect(prisma.user.findMany).toHaveBeenCalledTimes(1);
+      expect(prisma.user.findMany).toHaveBeenCalledWith(/* nothing */);
+    });
   });
 
   describe('create', () => {
