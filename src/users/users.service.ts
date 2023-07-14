@@ -70,8 +70,18 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, data: UpdateUserDto) {
+
+    await this.verifyUniqueProperty(data?.email, data?.username, {
+      throwIfExists: true
+    });
+
+    const result = this.prisma.user.update({data, where: { id }});
+
+    return {
+      ...result,
+      password: undefined
+    };
   }
 
   async remove(id: string) {
@@ -87,6 +97,9 @@ export class UsersService {
     username?: string, 
     settings?: {throwIfExists?: boolean}
   ){
+
+    if(!email && !username) return;
+
     const user = await this.prisma.user.findFirst({
       where: {
         OR: [
