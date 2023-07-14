@@ -43,7 +43,7 @@ const serviceMock = {
     name: 'userUpdated',
     username: 'user',
     email: 'user@email.com',
-    password: 'user',
+    password: undefined,
     birthdate: new Date('')
   })
 }
@@ -150,7 +150,7 @@ describe('UsersController', () => {
         name: 'userUpdated'
       };
 
-      const response = await service.update('id', update);
+      const response = await controller.update('id', update);
 
       expect(response).toBeDefined();
       expect(response?.password).toBeUndefined();
