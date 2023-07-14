@@ -72,6 +72,7 @@ export class UsersService {
 
   async update(id: string, data: UpdateUserDto) {
 
+    await this.findOne(id);
     await this.verifyUniqueProperty(data?.email, data?.username, {
       throwIfExists: true
     });

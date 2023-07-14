@@ -206,7 +206,7 @@ describe('UsersService', () => {
       });
 
       expect(JSON.stringify(response)).toEqual(expected);
-      expect(prisma.user.findFirst).toHaveBeenCalledTimes(4);
+      expect(prisma.user.findFirst).toHaveBeenCalledTimes(6);
       expect(prisma.user.findFirst).toHaveBeenCalledWith({
         where: { id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e' },
       });
@@ -219,7 +219,7 @@ describe('UsersService', () => {
         await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
-        expect(prisma.user.findFirst).toHaveBeenCalledTimes(5);
+        expect(prisma.user.findFirst).toHaveBeenCalledTimes(7);
         expect(prisma.user.findFirst).toHaveBeenCalledWith({
           where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
         });
