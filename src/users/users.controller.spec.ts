@@ -21,6 +21,15 @@ const serviceMock = {
     }
     return user;
   }),
+  findAll: jest.fn().mockResolvedValue([
+    {
+      name: 'user',
+      username: 'user',
+      email: 'user@email.com',
+      password: 'user',
+      birthdate: new Date('')
+    }
+  ]),
   remove: jest.fn(),
   findOne: jest.fn().mockResolvedValue({
     name: 'user',
@@ -51,6 +60,32 @@ describe('UsersController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
+  });
+
+  describe('findAll', () => {
+    it('should return users successfully', async () => {
+      const expected = JSON.stringify([
+        {
+          name: 'user',
+          username: 'user',
+          email: 'user@email.com',
+          password: 'user',
+          birthdate: new Date('')
+        }
+      ]);
+
+      const result = await controller.findAll();
+
+      expect(JSON.stringify(result)).toEqual(expected);
+      expect(service.findAll).toHaveBeenCalledTimes(1);
+      expect(service.findAll).toHaveBeenCalledWith(/* nothing */);
+    });
+
+    it('should throw an exception', () => {
+      jest.spyOn(service, 'findAll').mockRejectedValueOnce(new Error());
+
+      expect(controller.findAll()).rejects.toThrowError();
+    });
   });
 
   describe('create', () => {
