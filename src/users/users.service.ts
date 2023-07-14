@@ -14,23 +14,9 @@ export class UsersService {
   constructor(private prisma: PrismaService) { }
   async create(createUserDto: CreateUserDto) {
 
-    const userExists = await this.prisma.user.findFirst({
-      where: {
-        OR: [
-          { email: createUserDto.email },
-          { username: createUserDto.username }
-        ]
-      },
-      select: {
-        email: true,
-        username: true
-      }
+    await this.verifyUniqueProperty(createUserDto.email, createUserDto.username, {
+      throwIfExists: true
     });
-
-    if (userExists) {
-      let message = userExists.email == createUserDto.email ? 'Email' : 'Username';
-      throw new BadRequestException(`${message} is already in use.`);
-    }
 
     const levelStateId = await this.prisma.levelState.findFirst({
       select: {
@@ -94,5 +80,31 @@ export class UsersService {
       ...response,
       password: undefined
     }
+  }
+
+  async verifyUniqueProperty(
+    email?: string, 
+    username?: string, 
+    settings?: {throwIfExists?: boolean}
+  ){
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: email },
+          { username: username }
+        ]
+      },
+      select: {
+        email: true,
+        username: true
+      }
+    });
+
+    if(!user) return;
+
+    if(!settings.throwIfExists) return user;
+
+    let message = user?.email == email ? 'Email' : 'Username';
+    throw new BadRequestException(`${message} is already in use.`);
   }
 }
