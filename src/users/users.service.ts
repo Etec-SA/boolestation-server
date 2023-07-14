@@ -68,8 +68,8 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.prisma.user.findMany();
   }
 
   async findOne(id: string) {
