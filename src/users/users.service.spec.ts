@@ -175,7 +175,7 @@ describe('UsersService', () => {
     });
 
     it(`should return an exception when user is not found`, async () => {
-      jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(undefined);
+      jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce(undefined);
       
       try {
         await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
@@ -214,5 +214,58 @@ describe('UsersService', () => {
       expect(prisma.user.delete).toHaveBeenCalledWith({ where: { id: nonExistingUserId } });
     });
 
+  });
+
+  describe('verifyUniqueProperty', ()=>{
+    it('should return nothing if both property params are null', async ()=>{
+      const result = await service.verifyUniqueProperty();
+      expect(result).toBeUndefined();
+    });
+
+    it('should return nothing if dont find nothing', async ()=>{
+      jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce(undefined);
+      const result = await service.verifyUniqueProperty('email', 'username');
+      expect(result).toBeUndefined();
+    });
+
+    it('should return an user if email match', async ()=>{
+      const result = await service.verifyUniqueProperty('user@email.com', 'user2', {
+        throwIfExists: false
+      });
+
+      expect(result).toBeDefined();
+      expect(result.email).toEqual('user@email.com');
+    });
+
+    it('should return an user if username match', async ()=>{
+      const result = await service.verifyUniqueProperty('user@emaisl.com', 'user', {
+        throwIfExists: false
+      });
+
+      expect(result).toBeDefined();
+      expect(result.username).toEqual('user');
+    });
+
+    it('should throw an exception if email match', async ()=>{
+      try{
+        await service.verifyUniqueProperty('user@email.com', 'usero', {
+          throwIfExists: true
+        });
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+        expect(e.message).toEqual('Email is already in use.');
+      }
+    });
+
+    it('should throw an exception if username match', async ()=>{
+      try{
+        await service.verifyUniqueProperty('userss@email.com', 'user', {
+          throwIfExists: true
+        });
+      }catch(e){
+        expect(e).toBeInstanceOf(BadRequestException);
+        expect(e.message).toEqual('Username is already in use.');
+      }
+    });
   });
 });
