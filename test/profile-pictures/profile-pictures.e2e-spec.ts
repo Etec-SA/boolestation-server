@@ -12,7 +12,7 @@ let createdProfilePicture: ProfilePicture;
 let app: INestApplication;
 
 describe('AppController (e2e)', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [ProfilePicturesModule],
     }).compile();

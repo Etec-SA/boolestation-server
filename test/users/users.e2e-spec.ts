@@ -12,7 +12,7 @@ let findedUser: User;
 let app: INestApplication;
 
 describe('Users (e2e)', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [UsersModule],
     }).compile();

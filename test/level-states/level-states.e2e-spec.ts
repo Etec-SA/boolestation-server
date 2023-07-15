@@ -13,7 +13,7 @@ let createdLevelState: LevelState;
 
 describe('LevelStatesController (e2e)', () => {
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [LevelStatesModule],
     }).compile();
