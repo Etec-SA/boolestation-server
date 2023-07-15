@@ -12,6 +12,7 @@ dayjs.extend(utc);
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) { }
+
   async create(createUserDto: CreateUserDto) {
 
     await this.verifyUniqueProperty(createUserDto.email, createUserDto.username, {
@@ -54,6 +55,7 @@ export class UsersService {
     }
   }
 
+  
   async findAll() {
     return await this.prisma.user.findMany();
   }
@@ -68,6 +70,12 @@ export class UsersService {
     if (!user) throw new NotFoundException('User Not Found');
 
     return user;
+  }
+
+  async findByEmail(email: string){
+    return await this.prisma.user.findFirst({
+      where: { email }
+    });
   }
 
   async update(id: string, data: UpdateUserDto) {
