@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -46,6 +46,7 @@ export class AuthService {
 
     async validateAdmin(id: string){
         const user = await this.userService.findOne(id);
-        return user.isAdmin;
+        if(!user.isAdmin) throw new UnauthorizedException('You dont have permission.');
+        return true;
     }
 }
