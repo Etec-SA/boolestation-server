@@ -22,10 +22,8 @@ import {
         context.getClass(),
       ]);
   
-      if (isPublic) {
-        return true;
-      }
-  
+      if (isPublic) return true;
+
       const canActivate = super.canActivate(context);
   
       if (typeof canActivate === 'boolean') {

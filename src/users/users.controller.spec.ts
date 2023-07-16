@@ -13,6 +13,7 @@ const serviceMock = {
       id: crypto.randomUUID(),
       xp: 0,
       isPremium: false,
+      isAdmin: false,
       levelStateId: crypto.randomUUID(),
       profilePictureId: crypto.randomUUID(),
       createdAt: new Date('2000-12-12'),

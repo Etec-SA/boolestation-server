@@ -19,6 +19,7 @@ model User {
   email            String         @unique
   password         String
   birthdate        DateTime
+  isAdmin          Boolean        @default(false)
   isPremium        Boolean        @default(false)
   xp               Int            @default(0)
   profilePicture   ProfilePicture @relation(fields: [profilePictureId], references: [id])

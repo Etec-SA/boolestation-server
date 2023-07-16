@@ -27,6 +27,9 @@ export class UserEntity implements User {
   isPremium: boolean;
 
   @ApiProperty()
+  isAdmin: boolean;
+
+  @ApiProperty()
   levelStateId: string;
 
   @ApiProperty()
