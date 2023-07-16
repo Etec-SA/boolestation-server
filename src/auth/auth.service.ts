@@ -43,4 +43,9 @@ export class AuthService {
             password: undefined
         }
     }
+
+    async validateAdmin(id: string){
+        const user = await this.userService.findOne(id);
+        return user.isAdmin;
+    }
 }
