@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { UserPayload } from './entities/user-payload.entity';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from './enums/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -13,12 +14,16 @@ export class AuthService {
     ){}
 
     async login(user: UserEntity) {
-        const {username, email, name, id} = user;
+        const {username, email, name, id, isAdmin, isPremium} = user;
 
         const payload: UserPayload = {
             username,
             email,
             name,
+            roles: {
+                isAdmin,
+                isPremium
+            },
             sub: id
         }
 
@@ -46,6 +51,7 @@ export class AuthService {
 
     async validateAdmin(id: string){
         const user = await this.userService.findOne(id);
+        console.log(user.isAdmin);
         if(!user.isAdmin) throw new UnauthorizedException('You dont have permission.');
         return true;
     }
