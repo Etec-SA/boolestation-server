@@ -58,15 +58,23 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('validateUser', () => {
+    it('should validate user', async () => {
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never);
+      const result = await service.validateUser(user.email, user.password);
+      expect(result).toBeDefined();
+      expect(result?.password).toBeUndefined();
+      expect(result).toEqual({
+        ...user,
+        password: undefined
+      });
+    });
 
-  it('should validate user', async () => {
-    jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never);
-    const result = await service.validateUser('aristotle@athenas.com', 'zonpoNWDNIEONAwqplaźwdqwd-20@(13142');
-    expect(result).toBeDefined();
-    expect(result?.password).toBeUndefined();
-    expect(result).toEqual({
-      ...user,
-      password: undefined
+    it('should throw an error if findByEmail dont return the user', async () => {
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(undefined);
+      await expect(service.validateUser(user.email, user.password))
+        .rejects
+        .toThrowError('Email or password is incorrect.');
     });
   });
 });
