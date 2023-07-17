@@ -76,5 +76,13 @@ describe('AuthService', () => {
         .rejects
         .toThrowError('Email or password is incorrect.');
     });
+
+    it('should throw an error if compare return false', async () => {
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false as never);
+      await expect(service.validateUser(user.email, user.password))
+        .rejects
+        .toThrowError('Email or password is incorrect.');
+    });
+
   });
 });
