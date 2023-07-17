@@ -53,8 +53,11 @@ describe('AuthService', () => {
   });
 
   it('should be defined', () => {
+    expect(jwtService).toBeDefined();
+    expect(usersService).toBeDefined();
     expect(service).toBeDefined();
   });
+
 
   it('should validate user', async () => {
     jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never);
