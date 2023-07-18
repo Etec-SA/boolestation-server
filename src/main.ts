@@ -10,8 +10,10 @@ async function bootstrap() {
     .setTitle('Boolestation')
     .setDescription('Server application of Boolestation')
     .setVersion('1.0')
+    .addTag('authentication')
     .addTag('level-states')
     .addTag('profile-pictures')
+    .addTag('users')
     .addBearerAuth()
     .build();
 
