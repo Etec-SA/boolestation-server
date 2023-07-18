@@ -105,6 +105,39 @@ describe('ProfilePicturesService', () => {
     });
   });
 
+  describe('findFirstProfilePictureId', () => {
+    it('should return a single profile-picture', async () => {
+      jest.spyOn(prisma.profilePicture, 'findFirst')
+        .mockResolvedValueOnce(InMemoryProfilePictures[0].id as any);
+      const response = await service.findFirstProfilePictureId();
+
+      expect(response).toEqual(InMemoryProfilePictures[0].id);
+      expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(3);
+      expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
+        select: { id: true },
+        orderBy: {
+          createdAt: 'asc'
+        }
+      });
+    });
+
+    it(`should return an exception when profile picture is not found`, async () => {
+      jest.spyOn(prisma.profilePicture, 'findFirst').mockResolvedValue(undefined);
+      try {
+        await service.findFirstProfilePictureId();
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+        expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(4);
+        expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
+          select: { id: true },
+          orderBy: {
+            createdAt: 'asc'
+          }
+        });
+      }
+    });
+  });
+
 
   describe('create', () => {
     it('should create a new profile-picture and return it', async () => {

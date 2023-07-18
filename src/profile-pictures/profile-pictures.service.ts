@@ -29,6 +29,15 @@ export class ProfilePicturesService {
     return profilePicture;
   }
 
+  async findFirstProfilePictureId(){
+    return await this.prisma.profilePicture.findFirst({
+      select: { id: true },
+      orderBy: {
+        createdAt: 'asc'
+      }
+    });
+  }
+
   async update(id: string, data: UpdateProfilePictureDto) {
     const profilePicture = await this.prisma.profilePicture.update({
       where: { id },
