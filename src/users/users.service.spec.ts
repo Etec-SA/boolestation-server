@@ -228,6 +228,30 @@ describe('UsersService', () => {
     });
   });
 
+  describe('findByEmail', ()=>{
+    it('should return a single user', async () => {
+      const response = await service.findByEmail('user@email.com');
+      const expected = JSON.stringify({
+        name: 'user',
+        username: 'user',
+        email: 'user@email.com',
+        password: 'user',
+        birthdate: new Date('0000-00-00')
+      });
+
+      expect(JSON.stringify(response)).toEqual(expected);
+      expect(prisma.user.findFirst).toHaveBeenCalledTimes(8);
+      expect(prisma.user.findFirst).toHaveBeenCalledWith({
+        where: { email: 'user@email.com' },
+      });
+    });
+
+    it('should throw an error', async () => {
+      jest.spyOn(prisma.user, 'findFirst').mockRejectedValueOnce(new Error());
+      await expect(service.findByEmail('user@email.com')).rejects.toThrowError();
+    });
+  });
+
   describe('remove', () => {
     it('should remove an existing user', async () => {
       const existingUserId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
