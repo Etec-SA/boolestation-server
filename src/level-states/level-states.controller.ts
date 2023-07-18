@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } 
 import { LevelStatesService } from './level-states.service';
 import { CreateLevelStateDto } from './dto/create-level-state.dto';
 import { UpdateLevelStateDto } from './dto/update-level-state.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LevelStateEntity } from './entities/level-state.entity';
 
+@ApiBearerAuth()
 @ApiTags('level-states')
 @Controller('level-states')
 export class LevelStatesController {
