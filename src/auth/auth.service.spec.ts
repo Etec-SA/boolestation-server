@@ -41,7 +41,9 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: {
-
+            sign: () => {
+              return 'token';
+            }
           }
         }
       ],
@@ -82,6 +84,14 @@ describe('AuthService', () => {
       await expect(service.validateUser(user.email, user.password))
         .rejects
         .toThrowError('Email or password is incorrect.');
+    });
+  });
+
+  describe('login', () => {
+    it('should return the access token', async () => {
+      const result = await service.login(user);
+      expect(result).toBeDefined();
+      expect(result.access_token).toEqual('token');
     });
 
   });
