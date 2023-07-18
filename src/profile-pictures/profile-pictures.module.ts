@@ -5,6 +5,7 @@ import { PrismaService } from '../database/prisma.service';
 
 @Module({
   controllers: [ProfilePicturesController],
-  providers: [ProfilePicturesService, PrismaService]
+  providers: [ProfilePicturesService, PrismaService],
+  exports: [ProfilePicturesService]
 })
 export class ProfilePicturesModule { }
