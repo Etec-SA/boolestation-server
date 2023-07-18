@@ -6,8 +6,8 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nest
 import { LevelStateEntity } from './entities/level-state.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/roles.enum';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
 
-@ApiBearerAuth()
 @ApiTags('level-states')
 @Controller('level-states')
 export class LevelStatesController {
@@ -15,18 +15,21 @@ export class LevelStatesController {
 
   @Roles(Role.Admin)
   @ApiCreatedResponse({ type: LevelStateEntity })
+  @ApiBearerAuth()
   @Post()
   create(@Body() createLevelStateDto: CreateLevelStateDto) {
     return this.levelStatesService.create(createLevelStateDto);
   }
 
   @ApiOkResponse({ type: LevelStateEntity, isArray: true })
+  @IsPublic()
   @Get()
   findAll() {
     return this.levelStatesService.findAll();
   }
 
   @ApiOkResponse({ type: LevelStateEntity })
+  @IsPublic()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const levelState = await this.levelStatesService.findOne(id);
@@ -35,6 +38,7 @@ export class LevelStatesController {
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: LevelStateEntity })
+  @ApiBearerAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLevelStateDto: UpdateLevelStateDto) {
     return this.levelStatesService.update(id, updateLevelStateDto);
@@ -42,6 +46,7 @@ export class LevelStatesController {
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: LevelStateEntity })
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.levelStatesService.remove(id);
