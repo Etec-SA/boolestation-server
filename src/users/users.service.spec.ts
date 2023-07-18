@@ -7,6 +7,7 @@ import { User } from '@prisma/client';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LevelStatesService } from '../level-states/level-states.service';
+import { ProfilePicturesService } from '../profile-pictures/profile-pictures.service';
 
 const prismaMock = {
   user: {
@@ -56,6 +57,10 @@ const levelStateServiceMock = {
   findLowestLevelStateId: jest.fn().mockResolvedValue(crypto.randomUUID()),
 }
 
+const profilePicturesServiceMock = {
+  findFirstProfilePictureId: jest.fn().mockResolvedValue(crypto.randomUUID()),
+}
+
 describe('UsersService', () => {
   let service: UsersService;
   let prisma: PrismaService;
@@ -64,7 +69,8 @@ describe('UsersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService,
         { provide: PrismaService, useValue: prismaMock },
-        { provide: LevelStatesService, useValue: levelStateServiceMock }
+        { provide: LevelStatesService, useValue: levelStateServiceMock },
+        { provide: ProfilePicturesService, useValue: profilePicturesServiceMock }
       ],
     }).compile();
 

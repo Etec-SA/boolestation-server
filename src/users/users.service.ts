@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 import { LevelStatesService } from '../level-states/level-states.service';
+import { ProfilePicturesService } from '../profile-pictures/profile-pictures.service';
 
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
@@ -14,7 +15,8 @@ dayjs.extend(utc);
 export class UsersService {
   constructor(
     private prisma: PrismaService,
-    private levelStatesService: LevelStatesService
+    private levelStatesService: LevelStatesService,
+    private profilePicturesService: ProfilePicturesService
     ) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -25,12 +27,7 @@ export class UsersService {
 
     const levelStateId = await this.levelStatesService.findLowestLevelStateId();
 
-    const profilePictureId = await this.prisma.profilePicture.findFirst({
-      select: { id: true },
-      orderBy: {
-        createdAt: 'asc'
-      }
-    });
+    const profilePictureId = await this.profilePicturesService.findFirstProfilePictureId();
 
     const user: Prisma.UserCreateInput = {
       ...createUserDto,
