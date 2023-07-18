@@ -6,7 +6,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nest
 import { ProfilePictureEntity } from './entities/profile-picture.entity';
 import { Role } from '../auth/enums/roles.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
 
 @ApiTags('profile-pictures')
 @Controller('profile-pictures')
