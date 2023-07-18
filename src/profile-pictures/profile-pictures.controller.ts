@@ -4,6 +4,8 @@ import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ProfilePictureEntity } from './entities/profile-picture.entity';
+import { Role } from '../auth/enums/roles.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiBearerAuth()
 @ApiTags('profile-pictures')
@@ -11,6 +13,7 @@ import { ProfilePictureEntity } from './entities/profile-picture.entity';
 export class ProfilePicturesController {
   constructor(private readonly profilePicturesService: ProfilePicturesService) { }
 
+  @Roles(Role.Admin)
   @ApiCreatedResponse({ type: ProfilePictureEntity })
   @Post()
   create(@Body() createProfilePictureDto: CreateProfilePictureDto) {
@@ -29,12 +32,14 @@ export class ProfilePicturesController {
     return this.profilePicturesService.findOne(id);
   }
 
+  @Roles(Role.Admin)
   @ApiOkResponse({ type: ProfilePictureEntity })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
     return this.profilePicturesService.update(id, updateProfilePictureDto);
   }
 
+  @Roles(Role.Admin)
   @ApiOkResponse({ type: ProfilePictureEntity })
   @Delete(':id')
   remove(@Param('id') id: string) {
