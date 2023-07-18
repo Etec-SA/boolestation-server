@@ -90,10 +90,40 @@ describe('LevelStatesService', () => {
     });
 
     it(`should return an error when level state is not found`, async () => {
-      jest.spyOn(prisma.levelState, 'findFirst').mockResolvedValue(undefined);
+      jest.spyOn(prisma.levelState, 'findFirst').mockResolvedValueOnce(undefined);
 
       try {
         await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
+
+    });
+  });
+
+  describe('findLowestLevelStateId', ()=>{
+    it('should return a single level state id', async () => {
+      jest.spyOn(prisma.levelState, 'findFirst')
+        .mockResolvedValueOnce(InMemoryLevelStates[0].id as any);
+      const response = await service.findLowestLevelStateId();
+
+      expect(response).toEqual(InMemoryLevelStates[0].id);
+      expect(prisma.levelState.findFirst).toHaveBeenCalledTimes(3);
+      expect(prisma.levelState.findFirst).toHaveBeenCalledWith({
+        select: {
+          id: true
+        },
+        orderBy: {
+          requiredXp: 'asc'
+        }
+      });
+    });
+
+    it(`should throw an error`, async () => {
+      jest.spyOn(prisma.levelState, 'findFirst').mockResolvedValueOnce(undefined);
+
+      try {
+        await service.findLowestLevelStateId();
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
       }

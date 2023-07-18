@@ -23,6 +23,19 @@ export class LevelStatesService {
     return levelState;
   }
 
+  async findLowestLevelStateId(){
+    const levelStateId = await this.prisma.levelState.findFirst({
+      select: {
+        id: true
+      },
+      orderBy: {
+        requiredXp: 'asc'
+      }
+    });
+
+    if (!levelStateId) throw new NotFoundException('Level State not found!');
+    return levelStateId;
+  }
 
   async update(id: string, data: UpdateLevelStateDto) {
     const levelState = await this.prisma.levelState.update({
