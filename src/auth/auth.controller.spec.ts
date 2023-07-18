@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthRequest } from './entities/auth-request.entity';
 import { User } from '@prisma/client';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -56,7 +57,21 @@ describe('AuthController', () => {
 
       const result = await controller.login(request);
       expect(result).toBeDefined();
-      expect(result.access_token).toEqual('token');
+      expect(result.access_token).toEqual('token')
+    });
+
+    it('should throw unauthorized error', async () => {
+      jest.spyOn(service, 'login')
+        .mockRejectedValue(new UnauthorizedException('Email or password is incorrect.'));
+
+      const request = {
+        user
+      } as AuthRequest;
+
+      await expect(controller.login(request))
+        .rejects
+        .toThrowError('Email or password is incorrect.');
+
     });
   });
 });
