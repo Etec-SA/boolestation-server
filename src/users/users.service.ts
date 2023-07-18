@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
+import { LevelStatesService } from '../level-states/level-states.service';
 
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
@@ -11,7 +12,10 @@ dayjs.extend(utc);
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private levelStatesService: LevelStatesService
+    ) { }
 
   async create(createUserDto: CreateUserDto) {
 
@@ -19,14 +23,7 @@ export class UsersService {
       throwIfExists: true
     });
 
-    const levelStateId = await this.prisma.levelState.findFirst({
-      select: {
-        id: true
-      },
-      orderBy: {
-        requiredXp: 'asc'
-      }
-    });
+    const levelStateId = await this.levelStatesService.findLowestLevelStateId();
 
     const profilePictureId = await this.prisma.profilePicture.findFirst({
       select: { id: true },

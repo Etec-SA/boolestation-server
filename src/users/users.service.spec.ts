@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LevelStatesService } from '../level-states/level-states.service';
 
 const prismaMock = {
   user: {
@@ -49,9 +50,10 @@ const prismaMock = {
   profilePicture: {
     findFirst: jest.fn().mockResolvedValue(crypto.randomUUID())
   },
-  levelState: {
-    findFirst: jest.fn().mockResolvedValue(crypto.randomUUID())
-  }
+}
+
+const levelStateServiceMock = {
+  findLowestLevelStateId: jest.fn().mockResolvedValue(crypto.randomUUID()),
 }
 
 describe('UsersService', () => {
@@ -61,7 +63,8 @@ describe('UsersService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService,
-        { provide: PrismaService, useValue: prismaMock }
+        { provide: PrismaService, useValue: prismaMock },
+        { provide: LevelStatesService, useValue: levelStateServiceMock }
       ],
     }).compile();
 
