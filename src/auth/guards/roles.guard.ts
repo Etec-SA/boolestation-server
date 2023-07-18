@@ -7,7 +7,7 @@ import { ROLES_KEY } from '../decorators/roles.decorator';
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector
-    ) {}
+  ) { }
 
   canActivate(context: ExecutionContext): boolean {
     let isAuthorized = false;
@@ -21,9 +21,9 @@ export class RolesGuard implements CanActivate {
     }
 
     const { user } = context.switchToHttp().getRequest();
-    
-    requiredRoles.forEach(role =>{
-        if(user.roles[role]) isAuthorized = true;
+
+    requiredRoles.forEach(role => {
+      if (user.roles[role]) isAuthorized = true;
     });
 
     return isAuthorized;
