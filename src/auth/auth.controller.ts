@@ -2,15 +2,25 @@ import { Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nes
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './entities/auth-request.entity';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('authentication')
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
-    
-    @Post('login')
-    @HttpCode(HttpStatus.OK)
-    @UseGuards(LocalAuthGuard)
-    async login(@Request() req: AuthRequest){
-      return await this.authService.login(req.user);
+  constructor(private readonly authService: AuthService) { }
+
+  @ApiBody({
+    schema: {
+      example: {
+        email: "youremail@email.com",
+        password: "yourpassword"
+      }
     }
+  })
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  async login(@Request() req: AuthRequest) {
+    return await this.authService.login(req.user);
+  }
 }
