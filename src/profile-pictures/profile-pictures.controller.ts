@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProfilePicturesService } from './profile-pictures.service';
 import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
 import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ProfilePictureEntity } from './entities/profile-picture.entity';
 
+@ApiBearerAuth()
 @ApiTags('profile-pictures')
 @Controller('profile-pictures')
 export class ProfilePicturesController {
