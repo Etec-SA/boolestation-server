@@ -6,14 +6,15 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nest
 import { ProfilePictureEntity } from './entities/profile-picture.entity';
 import { Role } from '../auth/enums/roles.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
-@ApiBearerAuth()
 @ApiTags('profile-pictures')
 @Controller('profile-pictures')
 export class ProfilePicturesController {
   constructor(private readonly profilePicturesService: ProfilePicturesService) { }
 
   @Roles(Role.Admin)
+  @ApiBearerAuth()
   @ApiCreatedResponse({ type: ProfilePictureEntity })
   @Post()
   create(@Body() createProfilePictureDto: CreateProfilePictureDto) {
@@ -21,12 +22,14 @@ export class ProfilePicturesController {
   }
 
   @ApiOkResponse({ type: ProfilePictureEntity, isArray: true })
+  @IsPublic()
   @Get()
   findAll() {
     return this.profilePicturesService.findAll();
   }
 
   @ApiOkResponse({ type: ProfilePictureEntity })
+  @IsPublic()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.profilePicturesService.findOne(id);
@@ -34,6 +37,7 @@ export class ProfilePicturesController {
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: ProfilePictureEntity })
+  @ApiBearerAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProfilePictureDto: UpdateProfilePictureDto) {
     return this.profilePicturesService.update(id, updateProfilePictureDto);
@@ -41,6 +45,7 @@ export class ProfilePicturesController {
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: ProfilePictureEntity })
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.profilePicturesService.remove(id);
