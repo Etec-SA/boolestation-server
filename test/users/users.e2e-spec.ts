@@ -83,7 +83,7 @@ describe('Users (e2e)', () => {
 
   });
 
-  describe('/users (GET)', ()=>{
+  describe('/users (GET)', () => {
     it('should get all users', async () => {
       let response = await request(app.getHttpServer()).get('/users');
 
@@ -94,7 +94,7 @@ describe('Users (e2e)', () => {
     });
   });
 
-  describe('/users/:id (GET)', ()=>{
+  describe('/users/:id (GET)', () => {
     it('should get a single user', async () => {
       const id = findedUser.id;
 
@@ -116,14 +116,14 @@ describe('Users (e2e)', () => {
     });
   });
 
-  describe('/users/:id (PATCH)', ()=>{
-    it('should update an user with success', async ()=>{
+  describe('/users/:id (PATCH)', () => {
+    it('should update an user with success', async () => {
       const id = createdUser.id;
 
       let response = await request(app.getHttpServer())
         .patch(`/users/${id}`)
         .send({
-          username: 'hvs', 
+          username: 'hvs',
           id: "you cant't change it.",
           invalidField: true
         });
@@ -137,13 +137,13 @@ describe('Users (e2e)', () => {
       createdUser = response.body;
     });
 
-    it('should reject if username is already in use.', async ()=>{
+    it('should reject if username is already in use.', async () => {
       const id = createdUser.id;
 
       let response = await request(app.getHttpServer())
         .patch(`/users/${id}`)
         .send({
-          username: 'aristotle', 
+          username: 'aristotle',
         });
 
       expect(response).toBeDefined();
@@ -152,13 +152,13 @@ describe('Users (e2e)', () => {
       expect(response.body.message).toEqual('Username is already in use.');
     });
 
-    it('should reject if email is already in use.', async ()=>{
+    it('should reject if email is already in use.', async () => {
       const id = createdUser.id;
 
       let response = await request(app.getHttpServer())
         .patch(`/users/${id}`)
         .send({
-          email: 'aristotle@athenas.com', 
+          email: 'aristotle@athenas.com',
         });
 
       expect(response).toBeDefined();
@@ -167,11 +167,11 @@ describe('Users (e2e)', () => {
       expect(response.body.message).toEqual('Email is already in use.');
     });
 
-    it('should return 404.', async ()=>{
+    it('should return 404.', async () => {
       let response = await request(app.getHttpServer())
         .patch(`/users/212`)
         .send({
-          email: 'aristotle@athenas.com', 
+          email: 'aristotle@athenas.com',
         });
 
       expect(response).toBeDefined();
@@ -180,7 +180,7 @@ describe('Users (e2e)', () => {
     });
   });
 
-  describe('/users/:id (DELETE)', ()=>{
+  describe('/users/:id (DELETE)', () => {
     it('should remove an user with success', async () => {
       let response = await request(app.getHttpServer())
         .delete(`/users/${createdUser.id}`);
