@@ -17,7 +17,7 @@ export class UsersService {
     private prisma: PrismaService,
     private levelStatesService: LevelStatesService,
     private profilePicturesService: ProfilePicturesService
-    ) { }
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
 
@@ -49,7 +49,7 @@ export class UsersService {
     }
   }
 
-  
+
   async findAll() {
     return await this.prisma.user.findMany();
   }
@@ -60,13 +60,13 @@ export class UsersService {
         id
       }
     });
-    
+
     if (!user) throw new NotFoundException('User Not Found');
 
     return user;
   }
 
-  async findByEmail(email: string){
+  async findByEmail(email: string) {
     return await this.prisma.user.findFirst({
       where: { email }
     });
@@ -79,8 +79,8 @@ export class UsersService {
       throwIfExists: true
     });
 
-    const result = await this.prisma.user.update({data, where: { id }});
-    
+    const result = await this.prisma.user.update({ data, where: { id } });
+
     return {
       ...result,
       password: undefined
@@ -96,12 +96,12 @@ export class UsersService {
   }
 
   async verifyUniqueProperty(
-    email?: string, 
-    username?: string, 
-    settings?: {throwIfExists?: boolean}
-  ){
+    email?: string,
+    username?: string,
+    settings?: { throwIfExists?: boolean }
+  ) {
 
-    if(!email && !username) return;
+    if (!email && !username) return;
 
     const user = await this.prisma.user.findFirst({
       where: {
@@ -116,9 +116,9 @@ export class UsersService {
       }
     });
 
-    if(!user) return;
+    if (!user) return;
 
-    if(!settings.throwIfExists) return user;
+    if (!settings.throwIfExists) return user;
 
     let message = user?.email == email ? 'Email' : 'Username';
     throw new BadRequestException(`${message} is already in use.`);

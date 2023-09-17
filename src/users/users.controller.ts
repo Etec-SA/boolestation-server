@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags, ApiCreatedResponse } from '@nest
 import { Role } from '../auth/enums/roles.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserEntity } from './entities/user.entity';
+import { AuthRequest } from 'src/auth/entities/auth-request.entity';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -37,8 +38,8 @@ export class UsersController {
   @Roles(Role.Admin)
   @ApiOkResponse({ type: UserEntity })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Body() updateUserDto: UpdateUserDto, @Request() req: AuthRequest) {
+    return this.usersService.update(req.user.id, updateUserDto);
   }
 
   @Roles(Role.Admin)

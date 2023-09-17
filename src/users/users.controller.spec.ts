@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../database/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthRequest } from 'src/auth/entities/auth-request.entity';
 
 const serviceMock = {
   create: jest.fn((data: CreateUserDto) => {
@@ -145,30 +145,30 @@ describe('UsersController', () => {
     });
   });
 
-  describe('update', ()=>{
-    it('should update an user with success', async ()=>{
+  describe('update', () => {
+    it('should update an user with success', async () => {
       const update: UpdateUserDto = {
         name: 'userUpdated'
       };
 
-      const response = await controller.update('id', update);
+      const response = await controller.update(update, { user: { id: 'some-id' } } as any as AuthRequest);
 
       expect(response).toBeDefined();
       expect(response?.password).toBeUndefined();
       expect(service.update).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw an exception', async ()=>{
+    it('should throw an exception', async () => {
       jest.spyOn(service, 'update')
-      .mockRejectedValueOnce(new BadRequestException('Email is already in use.'));
+        .mockRejectedValueOnce(new BadRequestException('Email is already in use.'));
 
       const update: UpdateUserDto = {
         name: 'userUpdated'
       };
-      
-      try{
+
+      try {
         await service.update('id', update);
-      }catch(e){
+      } catch (e) {
         expect(e).toBeDefined();
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -179,7 +179,7 @@ describe('UsersController', () => {
   describe('findOne', () => {
     it('should return an individual user', async () => {
       const result = await controller.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
-      const expected =  JSON.stringify({
+      const expected = JSON.stringify({
         name: 'user',
         username: 'user',
         email: 'user@email.com',

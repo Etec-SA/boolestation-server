@@ -38,7 +38,7 @@ const prismaMock = {
       }
     ]),
     delete: jest.fn(),
-    update: jest.fn(()=>{
+    update: jest.fn(() => {
       return {
         name: 'userUpdated',
         username: 'user',
@@ -175,8 +175,8 @@ describe('UsersService', () => {
     });
   });
 
-  describe('update', ()=>{
-    it('should update an user with success', async ()=>{
+  describe('update', () => {
+    it('should update an user with success', async () => {
       jest.spyOn(service, 'verifyUniqueProperty').mockResolvedValueOnce(undefined);
       const update: UpdateUserDto = {
         name: 'userUpdated'
@@ -187,15 +187,15 @@ describe('UsersService', () => {
       expect(response?.password).toBeUndefined();
     });
 
-    it('should throw an exception if email or username is already in use', async ()=>{
+    it('should throw an exception if email or username is already in use', async () => {
       jest.spyOn(service, 'verifyUniqueProperty').mockRejectedValueOnce(new BadRequestException());
       const update: UpdateUserDto = {
         name: 'userUpdated'
       };
 
-      try{
+      try {
         await service.update('id', update);
-      }catch(e){
+      } catch (e) {
         expect(e).toBeDefined();
         expect(e).toBeInstanceOf(BadRequestException);
       }
@@ -223,7 +223,7 @@ describe('UsersService', () => {
 
     it(`should return an exception when user is not found`, async () => {
       jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce(undefined);
-      
+
       try {
         await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
       } catch (e) {
@@ -233,11 +233,11 @@ describe('UsersService', () => {
           where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
         });
       }
-      
+
     });
   });
 
-  describe('findByEmail', ()=>{
+  describe('findByEmail', () => {
     it('should return a single user', async () => {
       const response = await service.findByEmail('user@email.com');
       const expected = JSON.stringify({
@@ -265,7 +265,7 @@ describe('UsersService', () => {
     it('should remove an existing user', async () => {
       const existingUserId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
 
-      jest.spyOn(prisma.user, 'delete').mockResolvedValueOnce({id: existingUserId} as any);
+      jest.spyOn(prisma.user, 'delete').mockResolvedValueOnce({ id: existingUserId } as any);
 
       const result = await service.remove(existingUserId);
 
@@ -287,19 +287,19 @@ describe('UsersService', () => {
 
   });
 
-  describe('verifyUniqueProperty', ()=>{
-    it('should return nothing if both property params are null', async ()=>{
+  describe('verifyUniqueProperty', () => {
+    it('should return nothing if both property params are null', async () => {
       const result = await service.verifyUniqueProperty();
       expect(result).toBeUndefined();
     });
 
-    it('should return nothing if dont find nothing', async ()=>{
+    it('should return nothing if dont find nothing', async () => {
       jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce(undefined);
       const result = await service.verifyUniqueProperty('email', 'username');
       expect(result).toBeUndefined();
     });
 
-    it('should return an user if email match', async ()=>{
+    it('should return an user if email match', async () => {
       const result = await service.verifyUniqueProperty('user@email.com', 'user2', {
         throwIfExists: false
       });
@@ -308,7 +308,7 @@ describe('UsersService', () => {
       expect(result.email).toEqual('user@email.com');
     });
 
-    it('should return an user if username match', async ()=>{
+    it('should return an user if username match', async () => {
       const result = await service.verifyUniqueProperty('user@emaisl.com', 'user', {
         throwIfExists: false
       });
@@ -317,23 +317,23 @@ describe('UsersService', () => {
       expect(result.username).toEqual('user');
     });
 
-    it('should throw an exception if email match', async ()=>{
-      try{
+    it('should throw an exception if email match', async () => {
+      try {
         await service.verifyUniqueProperty('user@email.com', 'usero', {
           throwIfExists: true
         });
-      }catch(e){
+      } catch (e) {
         expect(e).toBeInstanceOf(BadRequestException);
         expect(e.message).toEqual('Email is already in use.');
       }
     });
 
-    it('should throw an exception if username match', async ()=>{
-      try{
+    it('should throw an exception if username match', async () => {
+      try {
         await service.verifyUniqueProperty('userss@email.com', 'user', {
           throwIfExists: true
         });
-      }catch(e){
+      } catch (e) {
         expect(e).toBeInstanceOf(BadRequestException);
         expect(e.message).toEqual('Username is already in use.');
       }
