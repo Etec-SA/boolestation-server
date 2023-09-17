@@ -9,9 +9,10 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { ModulesModule } from './modules/modules.module';
 
 @Module({
-  imports: [LevelStatesModule, ProfilePicturesModule, UsersModule, AuthModule],
+  imports: [LevelStatesModule, ProfilePicturesModule, UsersModule, AuthModule, ModulesModule],
   controllers: [AppController],
   providers: [AppService, PrismaService,
   {
