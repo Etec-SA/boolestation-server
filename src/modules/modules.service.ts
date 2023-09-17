@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
+import { PrismaService } from '../database/prisma.service';
+import slugify from 'slugify';
 
 @Injectable()
 export class ModulesService {
-  create(createModuleDto: CreateModuleDto) {
-    return 'This action adds a new module';
+  constructor(private prisma: PrismaService) { }
+
+  async create(data: CreateModuleDto) {
+    const slug = slugify(data.title, { lower: true });
+
+    const module = await this.prisma.module.create({ data: { ...data, slug } });
+    return module;
   }
 
   findAll() {

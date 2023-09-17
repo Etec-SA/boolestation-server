@@ -5,7 +5,7 @@ import { UpdateModuleDto } from './dto/update-module.dto';
 
 @Controller('modules')
 export class ModulesController {
-  constructor(private readonly modulesService: ModulesService) {}
+  constructor(private readonly modulesService: ModulesService) { }
 
   @Post()
   create(@Body() createModuleDto: CreateModuleDto) {
