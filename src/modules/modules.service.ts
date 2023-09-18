@@ -31,6 +31,8 @@ export class ModulesService {
 
     await this.findOne(id);
 
+    if (data?.title) data['slug'] = slugify(data.title);
+
     const module = await this.prisma.module.update({
       where: { id },
       data
