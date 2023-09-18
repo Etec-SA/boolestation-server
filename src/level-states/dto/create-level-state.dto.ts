@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateLevelStateDto {
-
   @ApiProperty({ description: 'The title serves to name the level in which the user is.', example: 'O Logicista' })
   @IsNotEmpty()
   @IsString()
