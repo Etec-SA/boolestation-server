@@ -4,6 +4,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { CreateModuleDto } from "../../src/modules/dto/create-module.dto";
 import * as request from 'supertest';
 import { Module } from "@prisma/client";
+import * as modulesData from '../fixtures/modules';
 
 let app: INestApplication;
 let createdModule: Partial<Module>;
@@ -49,7 +50,7 @@ describe('ModulesController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(typeof response.body).toEqual(typeof response.body);
+      expect(typeof response.body).toEqual(typeof modulesData);
       findedModule = response.body[0];
     });
   });
