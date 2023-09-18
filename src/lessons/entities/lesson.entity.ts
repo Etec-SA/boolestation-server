@@ -1,1 +1,1 @@
-export class Lesson {}
+export class LessonEntity { }
