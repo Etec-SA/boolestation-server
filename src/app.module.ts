@@ -11,9 +11,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { ModulesModule } from './modules/modules.module';
 import { LessonsModule } from './lessons/lessons.module';
+import { ExercisesModule } from './exercises/exercises.module';
 
 @Module({
-  imports: [LevelStatesModule, ProfilePicturesModule, UsersModule, AuthModule, ModulesModule, LessonsModule],
+  imports: [LevelStatesModule, ProfilePicturesModule, UsersModule, AuthModule, ModulesModule, LessonsModule, ExercisesModule],
   controllers: [AppController],
   providers: [AppService, PrismaService,
   {
