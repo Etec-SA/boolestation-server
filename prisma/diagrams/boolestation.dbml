@@ -1,0 +1,97 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Project "BooleStation" {
+  database_type: 'PostgreSQL'
+  Note: ''
+}
+
+Table users {
+  id String [pk]
+  levelStateId String [not null]
+  profilePictureId String [not null]
+  username String [unique, not null]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  birthdate DateTime [not null]
+  isAdmin Boolean [not null, default: false]
+  isPremium Boolean [not null, default: false]
+  xp Int [not null, default: 0]
+  profilePicture profile_pictures [not null]
+  levelState level_states [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table modules {
+  id String [pk]
+  title String [not null]
+  slug String [not null]
+  description String [not null]
+  lessons lessons [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table lessons {
+  id String [pk]
+  title String [not null]
+  slug String [not null]
+  content String [not null]
+  moduleId String [not null]
+  module modules [not null]
+  exercises exercises [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table exercises {
+  id String [pk]
+  title String [not null]
+  description String [not null]
+  lessonId String [not null]
+  lesson lessons [not null]
+  alternatives alternatives [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table alternatives {
+  id String [pk]
+  content String [not null]
+  isCorrect Boolean [not null]
+  exerciseId String [not null]
+  exercise exercises [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table level_states {
+  id String [pk]
+  title String [not null]
+  requiredXp Int [not null]
+  users users [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table profile_pictures {
+  id String [pk]
+  title String [not null]
+  url String [not null]
+  users users [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Ref: users.profilePictureId > profile_pictures.id
+
+Ref: users.levelStateId > level_states.id
+
+Ref: lessons.moduleId > modules.id
+
+Ref: exercises.lessonId > lessons.id
+
+Ref: alternatives.exerciseId > exercises.id

@@ -12,6 +12,14 @@ generator erd {
   disableEmoji = true
 }
 
+generator dbml {
+  provider   = "prisma-dbml-generator"
+  output     = "./diagrams"
+  outputName = "boolestation.dbml"
+  projectName = "BooleStation"
+  projectDatabaseType = "PostgreSQL"
+}
+
 model User {
   id               String         @id @default(uuid())
   levelStateId     String
