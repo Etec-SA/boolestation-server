@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { LessonsService } from 'src/lessons/lessons.service';
 import { PrismaService } from '../database/prisma.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
 
 @Injectable()
 export class ExercisesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly lessonsService: LessonsService
+  ) { }
 
   create(createExerciseDto: CreateExerciseDto) {
-    return 'This action adds a new exercise';
+
   }
 
   findAll() {
