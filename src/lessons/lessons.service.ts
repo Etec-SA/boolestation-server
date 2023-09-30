@@ -13,11 +13,7 @@ export class LessonsService {
   ) { }
 
   async create(data: CreateLessonDto) {
-    try {
-      await this.modulesService.findOne(data.moduleId);
-    } catch {
-      throw new NotFoundException('Module not found.');
-    }
+    await this.modulesService.findOne(data.moduleId);
 
     const slug = slugify(data.title, { lower: true });
     const lesson = await this.prisma.lesson.create({ data: { ...data, slug } });
@@ -30,7 +26,7 @@ export class LessonsService {
 
   async findOne(id: string) {
     const lesson = await this.prisma.lesson.findFirst({ where: { id } });
-    if (!lesson) throw new NotFoundException();
+    if (!lesson) throw new NotFoundException('Lesson not found.');
     return lesson;
   }
 

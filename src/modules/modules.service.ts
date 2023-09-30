@@ -22,7 +22,7 @@ export class ModulesService {
   async findOne(id: string) {
     const module = await this.prisma.module.findFirst({ where: { id } });
 
-    if (!module) throw new NotFoundException();
+    if (!module) throw new NotFoundException('Module not found.');
 
     return module;
   }

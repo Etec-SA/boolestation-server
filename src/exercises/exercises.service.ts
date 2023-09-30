@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { LessonsService } from 'src/lessons/lessons.service';
 import { PrismaService } from '../database/prisma.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
@@ -11,8 +11,8 @@ export class ExercisesService {
     private readonly lessonsService: LessonsService
   ) { }
 
-  create(createExerciseDto: CreateExerciseDto) {
-
+  async create(data: CreateExerciseDto) {
+    await this.lessonsService.findOne(data.lessonId);
   }
 
   findAll() {
