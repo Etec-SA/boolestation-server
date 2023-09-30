@@ -13,21 +13,28 @@ export class ExercisesService {
 
   async create(data: CreateExerciseDto) {
     await this.lessonsService.findOne(data.lessonId);
+    const exercise = await this.prisma.exercise.create({ data });
+    return exercise;
   }
 
   findAll() {
-    return `This action returns all exercises`;
+    return this.prisma.exercise.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} exercise`;
+  async findOne(id: string) {
+    const exercise = await this.prisma.exercise.findFirst({ where: { id } });
+    if (!exercise) throw new NotFoundException('Exercise not found.');
+    return exercise;
   }
 
-  update(id: number, updateExerciseDto: UpdateExerciseDto) {
-    return `This action updates a #${id} exercise`;
+  async update(id: string, data: UpdateExerciseDto) {
+    await this.findOne(id);
+    if (data?.lessonId) await this.lessonsService.findOne(data.lessonId);
+    const exercise = await this.prisma.exercise.update({ where: { id }, data });
+    return exercise;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} exercise`;
+  remove(id: string) {
+    return this.prisma.exercise.delete({ where: { id } });
   }
 }
