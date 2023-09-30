@@ -11,6 +11,8 @@ async function bootstrap() {
     .setDescription('Server application of Boolestation')
     .setVersion('1.0')
     .addTag('authentication')
+    .addTag('exercises')
+    .addTag('lessons')
     .addTag('level-states')
     .addTag('modules')
     .addTag('profile-pictures')
