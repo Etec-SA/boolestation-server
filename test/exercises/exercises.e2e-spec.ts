@@ -4,7 +4,6 @@ import { ExercisesModule } from "../../src/exercises/exercises.module";
 import * as request from "supertest";
 import { CreateExerciseDto } from "../../src/exercises/dto/create-exercise.dto";
 import { Exercise } from "@prisma/client";
-import { UpdateExerciseDto } from "src/exercises/dto/update-exercise.dto";
 
 let app: INestApplication;
 let createdExercise: Partial<Exercise>;
@@ -88,6 +87,50 @@ describe("ExercisesController (e2e)", () => {
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
     });
+  });
+
+  describe("/exercises/:id (PATCH)", () => {
+    it('should update an exercise with success', async () => {
+      const updatedExercise = {
+        title: 'New Exercise',
+        description: 'Now updated.',
+        id: 'you cant change it',
+        invalidField: 'you cant send it',
+      };
+
+
+
+      const response = await request(app.getHttpServer())
+        .patch(`/exercises/${createdExercise.id}`)
+        .send(updatedExercise);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.title).toEqual(updatedExercise.title);
+      expect(response.body.description).toEqual(updatedExercise.description);
+      expect(response.body?.invalidField).toBeUndefined();
+      expect(response.body.id).not.toEqual(updatedExercise.id);
+    });
+
+    it('should return 404', async () => {
+      const updatedExercise = {
+        title: 'New Exercise',
+        description: 'Now updated.',
+        id: 'you cant change it',
+        invalidField: 'you cant send it',
+      };
+
+
+
+      const response = await request(app.getHttpServer())
+        .patch(`/exercises/2012`)
+        .send(updatedExercise);
+
+      expect(response).toBeDefined();
+      expect(response.status).toEqual(404);
+    });
+
+
   });
 
   describe("/exercises/:id (DELETE)", () => {
