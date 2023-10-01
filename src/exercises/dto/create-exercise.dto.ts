@@ -15,6 +15,7 @@ export class CreateExerciseDto {
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsUUID()
   lessonId: string;
 }
