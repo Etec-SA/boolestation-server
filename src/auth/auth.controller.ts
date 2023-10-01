@@ -1,24 +1,31 @@
-import { Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthRequest } from './entities/auth-request.entity';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { IsPublic } from './decorators/is-public.decorator';
+import {
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Request,
+} from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { AuthRequest } from "./entities/auth-request.entity";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { IsPublic } from "./decorators/is-public.decorator";
 
-@ApiTags('authentication')
+@ApiTags("authentication")
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @ApiBody({
     schema: {
       example: {
         email: "youremail@email.com",
-        password: "yourpassword"
-      }
-    }
+        password: "yourpassword",
+      },
+    },
   })
-  @Post('login')
+  @Post("login")
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @IsPublic()

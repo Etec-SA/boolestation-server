@@ -1,5 +1,4 @@
-import { Lesson } from '@prisma/client';
-
+import { Lesson } from "@prisma/client";
 
 export class LessonEntity implements Lesson {
   id: string;

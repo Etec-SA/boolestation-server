@@ -1,18 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
-import { LevelStatesModule } from '../../src/level-states/level-states.module';
-import * as levelStatesJson from '../fixtures/level-states';
-import { CreateLevelStateDto } from 'src/level-states/dto/create-level-state.dto';
-import { LevelState } from '@prisma/client';
-import { UpdateLevelStateDto } from 'src/level-states/dto/update-level-state.dto';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
+import * as request from "supertest";
+import { LevelStatesModule } from "../../src/level-states/level-states.module";
+import * as levelStatesJson from "../fixtures/level-states";
+import { CreateLevelStateDto } from "src/level-states/dto/create-level-state.dto";
+import { LevelState } from "@prisma/client";
+import { UpdateLevelStateDto } from "src/level-states/dto/update-level-state.dto";
 
 let app: INestApplication;
 let findedLevelState: LevelState;
 let createdLevelState: LevelState;
 
-describe('LevelStatesController (e2e)', () => {
-
+describe("LevelStatesController (e2e)", () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [LevelStatesModule],
@@ -23,9 +22,9 @@ describe('LevelStatesController (e2e)', () => {
     await app.init();
   });
 
-  describe('/level-states (GET)', () => {
-    it('should get all level states', async () => {
-      let response = await request(app.getHttpServer()).get('/level-states');
+  describe("/level-states (GET)", () => {
+    it("should get all level states", async () => {
+      let response = await request(app.getHttpServer()).get("/level-states");
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
@@ -34,38 +33,38 @@ describe('LevelStatesController (e2e)', () => {
     });
   });
 
-  describe('/level-states/:id (GET)', () => {
-    it('should get a single level state', async () => {
+  describe("/level-states/:id (GET)", () => {
+    it("should get a single level state", async () => {
       const id = findedLevelState.id;
 
-      let response = await request(app.getHttpServer())
-        .get(`/level-states/${id}`);
+      let response = await request(app.getHttpServer()).get(
+        `/level-states/${id}`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(findedLevelState);
     });
 
-    it('should return a 404', async () => {
-
-      let response = await request(app.getHttpServer())
-        .get(`/level-states/eusimplesmentenaoexisto`);
+    it("should return a 404", async () => {
+      let response = await request(app.getHttpServer()).get(
+        `/level-states/eusimplesmentenaoexisto`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
     });
   });
 
-  describe('/level-states/(POST)', () => {
-    it('should create a new level state', async () => {
+  describe("/level-states/(POST)", () => {
+    it("should create a new level state", async () => {
       let newLevelState: CreateLevelStateDto = {
-        title: 'O Novo Aprendiz',
-        requiredXp: 150
-      }
-
+        title: "O Novo Aprendiz",
+        requiredXp: 150,
+      };
 
       let response = await request(app.getHttpServer())
-        .post('/level-states')
+        .post("/level-states")
         .send(newLevelState);
 
       expect(response).toBeDefined();
@@ -76,14 +75,13 @@ describe('LevelStatesController (e2e)', () => {
       createdLevelState = response.body;
     });
 
-    it('should return status code 400', async () => {
+    it("should return status code 400", async () => {
       let newLevelState = {
-        title: 'I only have a title'
-      }
-
+        title: "I only have a title",
+      };
 
       let response = await request(app.getHttpServer())
-        .post('/level-states')
+        .post("/level-states")
         .send(newLevelState);
 
       expect(response).toBeDefined();
@@ -91,12 +89,12 @@ describe('LevelStatesController (e2e)', () => {
     });
   });
 
-  describe('/level-states/:id (PATCH)', () => {
-    it('should update a level state', async () => {
+  describe("/level-states/:id (PATCH)", () => {
+    it("should update a level state", async () => {
       let updatedLevelState: UpdateLevelStateDto = {
-        title: 'O Novo Aprendiz - Atualizado',
-        requiredXp: 151
-      }
+        title: "O Novo Aprendiz - Atualizado",
+        requiredXp: 151,
+      };
 
       let response = await request(app.getHttpServer())
         .patch(`/level-states/${createdLevelState.id}`)
@@ -110,12 +108,12 @@ describe('LevelStatesController (e2e)', () => {
       createdLevelState = response.body;
     });
 
-    it('should change only valid fields', async () => {
+    it("should change only valid fields", async () => {
       let updatedLevelState = {
-        id: 'new id',
+        id: "new id",
         invalidField: true,
-        requiredXp: 152
-      }
+        requiredXp: 152,
+      };
 
       let response = await request(app.getHttpServer())
         .patch(`/level-states/${createdLevelState.id}`)
@@ -123,7 +121,7 @@ describe('LevelStatesController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(response.body.id).not.toEqual('new id');
+      expect(response.body.id).not.toEqual("new id");
       expect(response.body?.invalidField).toBeUndefined();
       expect(response.body.requiredXp).toEqual(152);
 
@@ -131,10 +129,11 @@ describe('LevelStatesController (e2e)', () => {
     });
   });
 
-  describe('/level-states/:id (DELETE)', () => {
-    it('/level-states/:id (DELETE)', async () => {
-      let response = await request(app.getHttpServer())
-        .delete(`/level-states/${createdLevelState.id}`);
+  describe("/level-states/:id (DELETE)", () => {
+    it("/level-states/:id (DELETE)", async () => {
+      let response = await request(app.getHttpServer()).delete(
+        `/level-states/${createdLevelState.id}`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
@@ -142,13 +141,12 @@ describe('LevelStatesController (e2e)', () => {
       expect(response.body.requiredXp).toEqual(createdLevelState.requiredXp);
       expect(response.body.title).toEqual(createdLevelState.title);
 
-      response = await request(app.getHttpServer())
-        .get(`/level-states/${createdLevelState.id}`);
+      response = await request(app.getHttpServer()).get(
+        `/level-states/${createdLevelState.id}`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
     });
   });
 });
-
-

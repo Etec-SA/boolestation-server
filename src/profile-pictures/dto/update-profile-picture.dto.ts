@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateProfilePictureDto } from './create-profile-picture.dto';
+import { PartialType } from "@nestjs/swagger";
+import { CreateProfilePictureDto } from "./create-profile-picture.dto";
 
-export class UpdateProfilePictureDto extends PartialType(CreateProfilePictureDto) { }
+export class UpdateProfilePictureDto extends PartialType(
+  CreateProfilePictureDto
+) {}

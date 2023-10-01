@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../database/prisma.service';
-import { ProfilePicturesService } from './profile-pictures.service';
-import { CreateProfilePictureDto } from './dto/create-profile-picture.dto';
-import { UpdateProfilePictureDto } from './dto/update-profile-picture.dto';
-import { NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from "@nestjs/testing";
+import { PrismaService } from "../database/prisma.service";
+import { ProfilePicturesService } from "./profile-pictures.service";
+import { CreateProfilePictureDto } from "./dto/create-profile-picture.dto";
+import { UpdateProfilePictureDto } from "./dto/update-profile-picture.dto";
+import { NotFoundException } from "@nestjs/common";
 
 interface ProfilePicture {
   id: string;
@@ -13,29 +13,28 @@ interface ProfilePicture {
   updatedAt?: Date;
 }
 
-
 const InMemoryProfilePictures: Array<ProfilePicture> = [
   {
-    id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e',
-    title: 'Aristotle',
-    url: 'http://boolestation.com/public/aristotle.png'
+    id: "1c937b93-b38e-47dd-9fe8-a99b9802ed9e",
+    title: "Aristotle",
+    url: "http://boolestation.com/public/aristotle.png",
   },
   {
-    id: '45a215cd-0ad1-48ae-89b3-cb429bf86512',
-    title: 'Immanuel Kant',
-    url: 'http://boolestation.com/public/kant.png'
+    id: "45a215cd-0ad1-48ae-89b3-cb429bf86512",
+    title: "Immanuel Kant",
+    url: "http://boolestation.com/public/kant.png",
   },
   {
-    id: '2c937b93-b38e-47dd-9fe8-a99b9802ed9e',
-    title: 'Russel',
-    url: 'http://boolestation.com/public/russel.png'
+    id: "2c937b93-b38e-47dd-9fe8-a99b9802ed9e",
+    title: "Russel",
+    url: "http://boolestation.com/public/russel.png",
   },
   {
-    id: '3c937b93-b38e-47dd-9fe8-a99b9802ed9e',
-    title: 'Frege',
-    url: 'http://boolestation.com/public/frege.png'
+    id: "3c937b93-b38e-47dd-9fe8-a99b9802ed9e",
+    title: "Frege",
+    url: "http://boolestation.com/public/frege.png",
   },
-]
+];
 
 const prismaMock = {
   profilePicture: {
@@ -51,14 +50,15 @@ const prismaMock = {
   },
 };
 
-describe('ProfilePicturesService', () => {
+describe("ProfilePicturesService", () => {
   let service: ProfilePicturesService;
   let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProfilePicturesService,
-        { provide: PrismaService, useValue: prismaMock }
+      providers: [
+        ProfilePicturesService,
+        { provide: PrismaService, useValue: prismaMock },
       ],
     }).compile();
 
@@ -66,48 +66,55 @@ describe('ProfilePicturesService', () => {
     service = module.get<ProfilePicturesService>(ProfilePicturesService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
     expect(prisma).toBeDefined();
   });
 
-  describe('findAll', () => {
-    it('should return an array of profile pictures', async () => {
+  describe("findAll", () => {
+    it("should return an array of profile pictures", async () => {
       const response = await service.findAll();
       expect(response).toEqual(InMemoryProfilePictures);
       expect(prisma.profilePicture.findMany).toHaveBeenCalledTimes(1);
-      expect(prisma.profilePicture.findMany).toHaveBeenCalledWith(/* nothing */);
+      expect(
+        prisma.profilePicture.findMany
+      ).toHaveBeenCalledWith(/* nothing */);
     });
   });
 
-  describe('findOne', () => {
-    it('should return a single profile-picture', async () => {
-      const response = await service.findOne('1c937b93-b38e-47dd-9fe8-a99b9802ed9e');
+  describe("findOne", () => {
+    it("should return a single profile-picture", async () => {
+      const response = await service.findOne(
+        "1c937b93-b38e-47dd-9fe8-a99b9802ed9e"
+      );
 
       expect(response).toEqual(InMemoryProfilePictures[0]);
       expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(1);
       expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
-        where: { id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e' },
+        where: { id: "1c937b93-b38e-47dd-9fe8-a99b9802ed9e" },
       });
     });
 
     it(`should return an exception when profile picture is not found`, async () => {
-      jest.spyOn(prisma.profilePicture, 'findFirst').mockResolvedValue(undefined);
+      jest
+        .spyOn(prisma.profilePicture, "findFirst")
+        .mockResolvedValue(undefined);
       try {
-        await service.findOne('1c111b93-b38e-47dd-9fe8-a99b9802ed9e');
+        await service.findOne("1c111b93-b38e-47dd-9fe8-a99b9802ed9e");
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
         expect(prisma.profilePicture.findFirst).toHaveBeenCalledTimes(2);
         expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
-          where: { id: '1c111b93-b38e-47dd-9fe8-a99b9802ed9e' },
+          where: { id: "1c111b93-b38e-47dd-9fe8-a99b9802ed9e" },
         });
       }
     });
   });
 
-  describe('findFirstProfilePictureId', () => {
-    it('should return a single profile-picture', async () => {
-      jest.spyOn(prisma.profilePicture, 'findFirst')
+  describe("findFirstProfilePictureId", () => {
+    it("should return a single profile-picture", async () => {
+      jest
+        .spyOn(prisma.profilePicture, "findFirst")
         .mockResolvedValueOnce(InMemoryProfilePictures[0].id as any);
       const response = await service.findFirstProfilePictureId();
 
@@ -116,13 +123,15 @@ describe('ProfilePicturesService', () => {
       expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
         select: { id: true },
         orderBy: {
-          createdAt: 'asc'
-        }
+          createdAt: "asc",
+        },
       });
     });
 
     it(`should return an exception when profile picture is not found`, async () => {
-      jest.spyOn(prisma.profilePicture, 'findFirst').mockResolvedValue(undefined);
+      jest
+        .spyOn(prisma.profilePicture, "findFirst")
+        .mockResolvedValue(undefined);
       try {
         await service.findFirstProfilePictureId();
       } catch (e) {
@@ -131,22 +140,21 @@ describe('ProfilePicturesService', () => {
         expect(prisma.profilePicture.findFirst).toHaveBeenCalledWith({
           select: { id: true },
           orderBy: {
-            createdAt: 'asc'
-          }
+            createdAt: "asc",
+          },
         });
       }
     });
   });
 
-
-  describe('create', () => {
-    it('should create a new profile-picture and return it', async () => {
+  describe("create", () => {
+    it("should create a new profile-picture and return it", async () => {
       const oldArraySize = InMemoryProfilePictures.length;
 
       const newProfilePicture: CreateProfilePictureDto = {
-        title: 'Aquinas',
-        url: 'http://boolestation.com/aquinas.png'
-      }
+        title: "Aquinas",
+        url: "http://boolestation.com/aquinas.png",
+      };
 
       const createdProfilePicture = await service.create(newProfilePicture);
 
@@ -156,47 +164,59 @@ describe('ProfilePicturesService', () => {
       expect(createdProfilePicture.url).toEqual(newProfilePicture.url);
 
       expect(prisma.profilePicture.create).toHaveBeenCalledTimes(1);
-      expect(prisma.profilePicture.create).toHaveBeenCalledWith({ data: { ...newProfilePicture } });
+      expect(prisma.profilePicture.create).toHaveBeenCalledWith({
+        data: { ...newProfilePicture },
+      });
 
       expect(InMemoryProfilePictures.length).toBeGreaterThan(oldArraySize);
     });
 
-    it('should throw an error if the profile-picture creation fails', async () => {
+    it("should throw an error if the profile-picture creation fails", async () => {
       const oldArraySize = InMemoryProfilePictures.length;
 
       const newProfilePicture: CreateProfilePictureDto = {
-        title: 'Aquinas',
-        url: 'http://boolestation.com/aquinas.png'
-      }
+        title: "Aquinas",
+        url: "http://boolestation.com/aquinas.png",
+      };
 
-      jest.spyOn(prisma.profilePicture, 'create').mockRejectedValueOnce(new Error('Failed to create profile picture'));
+      jest
+        .spyOn(prisma.profilePicture, "create")
+        .mockRejectedValueOnce(new Error("Failed to create profile picture"));
 
-      await expect(service.create(newProfilePicture)).rejects.toThrowError('Failed to create profile picture');
+      await expect(service.create(newProfilePicture)).rejects.toThrowError(
+        "Failed to create profile picture"
+      );
       expect(prisma.profilePicture.create).toHaveBeenCalledTimes(2);
-      expect(prisma.profilePicture.create).toHaveBeenCalledWith({ data: { ...newProfilePicture } });
+      expect(prisma.profilePicture.create).toHaveBeenCalledWith({
+        data: { ...newProfilePicture },
+      });
       expect(InMemoryProfilePictures.length).not.toBeGreaterThan(oldArraySize);
     });
   });
 
-  describe('update', () => {
-
-    it('should update an existing profile picture and return the updated profile picture', async () => {
+  describe("update", () => {
+    it("should update an existing profile picture and return the updated profile picture", async () => {
       const existingProfilePicture: ProfilePicture = InMemoryProfilePictures[0];
 
       const updatedProfilePictureData: UpdateProfilePictureDto = {
-        title: 'Aristóteles',
-        url: 'http://bool.com.br/aristoteles'
+        title: "Aristóteles",
+        url: "http://bool.com.br/aristoteles",
       };
 
       const updatedProfilePicture: ProfilePicture = {
-        id: '1c937b93-b38e-47dd-9fe8-a99b9802ed9e',
-        title: 'Aristotle',
-        url: 'http://bool.com.br/aristoteles'
+        id: "1c937b93-b38e-47dd-9fe8-a99b9802ed9e",
+        title: "Aristotle",
+        url: "http://bool.com.br/aristoteles",
       };
 
-      jest.spyOn(prisma.profilePicture, 'update').mockResolvedValueOnce(updatedProfilePicture as any);
+      jest
+        .spyOn(prisma.profilePicture, "update")
+        .mockResolvedValueOnce(updatedProfilePicture as any);
 
-      const result = await service.update(existingProfilePicture.id, updatedProfilePictureData);
+      const result = await service.update(
+        existingProfilePicture.id,
+        updatedProfilePictureData
+      );
 
       expect(result).toEqual(updatedProfilePicture);
       expect(prisma.profilePicture.update).toHaveBeenCalledTimes(1);
@@ -206,16 +226,20 @@ describe('ProfilePicturesService', () => {
       });
     });
 
-    it('should throw an error if the profile picture does not exist', async () => {
-      const nonExistingProfilePictureId = 'non-existing-id';
+    it("should throw an error if the profile picture does not exist", async () => {
+      const nonExistingProfilePictureId = "non-existing-id";
       const updatedProfilePictureData: UpdateProfilePictureDto = {
-        title: 'Kant',
-        url: 'transcendental.com'
+        title: "Kant",
+        url: "transcendental.com",
       };
 
-      jest.spyOn(prisma.profilePicture, 'update').mockRejectedValueOnce(new Error());
+      jest
+        .spyOn(prisma.profilePicture, "update")
+        .mockRejectedValueOnce(new Error());
 
-      await expect(service.update(nonExistingProfilePictureId, updatedProfilePictureData)).rejects.toThrowError();
+      await expect(
+        service.update(nonExistingProfilePictureId, updatedProfilePictureData)
+      ).rejects.toThrowError();
       expect(prisma.profilePicture.update).toHaveBeenCalledTimes(2);
       expect(prisma.profilePicture.update).toHaveBeenCalledWith({
         where: { id: nonExistingProfilePictureId },
@@ -223,19 +247,23 @@ describe('ProfilePicturesService', () => {
       });
     });
 
-    it('should handle errors during update', async () => {
+    it("should handle errors during update", async () => {
       const existingProfilePicture: ProfilePicture = InMemoryProfilePictures[0];
 
       const updatedProfilePictureData: UpdateProfilePictureDto = {
-        title: 'Aristotle',
-        url: 'http://aristotlelovers.com/picture.png'
+        title: "Aristotle",
+        url: "http://aristotlelovers.com/picture.png",
       };
 
-      const updateError = new Error('Failed to update profile picture');
+      const updateError = new Error("Failed to update profile picture");
 
-      jest.spyOn(prisma.profilePicture, 'update').mockRejectedValueOnce(updateError);
+      jest
+        .spyOn(prisma.profilePicture, "update")
+        .mockRejectedValueOnce(updateError);
 
-      await expect(service.update(existingProfilePicture.id, updatedProfilePictureData)).rejects.toThrowError(updateError);
+      await expect(
+        service.update(existingProfilePicture.id, updatedProfilePictureData)
+      ).rejects.toThrowError(updateError);
       expect(prisma.profilePicture.update).toHaveBeenCalledTimes(3);
       expect(prisma.profilePicture.update).toHaveBeenCalledWith({
         where: { id: existingProfilePicture.id },
@@ -244,27 +272,37 @@ describe('ProfilePicturesService', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should remove an existing profile picture', async () => {
-      const existingProfilePictureId = '1c937b93-b38e-47dd-9fe8-a99b9802ed9e';
+  describe("remove", () => {
+    it("should remove an existing profile picture", async () => {
+      const existingProfilePictureId = "1c937b93-b38e-47dd-9fe8-a99b9802ed9e";
 
-      jest.spyOn(prisma.profilePicture, 'delete').mockResolvedValueOnce(existingProfilePictureId as any);
+      jest
+        .spyOn(prisma.profilePicture, "delete")
+        .mockResolvedValueOnce(existingProfilePictureId as any);
 
       const result = await service.remove(existingProfilePictureId);
 
       expect(result).toEqual(existingProfilePictureId);
       expect(prisma.profilePicture.delete).toHaveBeenCalledTimes(1);
-      expect(prisma.profilePicture.delete).toHaveBeenCalledWith({ where: { id: existingProfilePictureId } });
+      expect(prisma.profilePicture.delete).toHaveBeenCalledWith({
+        where: { id: existingProfilePictureId },
+      });
     });
 
-    it('should throw an error if the profile picture to remove does not exist', async () => {
-      const nonExistingProfilePictureId = 'non-existing-id';
+    it("should throw an error if the profile picture to remove does not exist", async () => {
+      const nonExistingProfilePictureId = "non-existing-id";
 
-      jest.spyOn(prisma.profilePicture, 'delete').mockRejectedValue(new Error('profile picture not found'));
+      jest
+        .spyOn(prisma.profilePicture, "delete")
+        .mockRejectedValue(new Error("profile picture not found"));
 
-      await expect(service.remove(nonExistingProfilePictureId)).rejects.toThrowError('profile picture not found');
+      await expect(
+        service.remove(nonExistingProfilePictureId)
+      ).rejects.toThrowError("profile picture not found");
       expect(prisma.profilePicture.delete).toHaveBeenCalledTimes(2);
-      expect(prisma.profilePicture.delete).toHaveBeenCalledWith({ where: { id: nonExistingProfilePictureId } });
+      expect(prisma.profilePicture.delete).toHaveBeenCalledWith({
+        where: { id: nonExistingProfilePictureId },
+      });
     });
   });
 });
