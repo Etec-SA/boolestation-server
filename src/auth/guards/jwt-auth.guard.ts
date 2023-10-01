@@ -3,13 +3,13 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { AuthGuard } from "@nestjs/passport";
+import { IS_PUBLIC_KEY } from "../decorators/is-public.decorator";
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard("jwt") {
   constructor(private reflector: Reflector) {
     super();
   }
@@ -24,7 +24,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     const canActivate = super.canActivate(context);
 
-    if (typeof canActivate === 'boolean') {
+    if (typeof canActivate === "boolean") {
       return canActivate;
     }
 

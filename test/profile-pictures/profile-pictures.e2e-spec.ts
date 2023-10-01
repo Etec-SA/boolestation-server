@@ -1,17 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
-import { ProfilePicturesModule } from '../../src/profile-pictures/profile-pictures.module';
-import { ProfilePicture } from '@prisma/client';
-import * as profilePicturesJson from '../fixtures/profile-pictures';
-import { CreateProfilePictureDto } from 'src/profile-pictures/dto/create-profile-picture.dto';
-import { UpdateProfilePictureDto } from 'src/profile-pictures/dto/update-profile-picture.dto';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
+import * as request from "supertest";
+import { ProfilePicturesModule } from "../../src/profile-pictures/profile-pictures.module";
+import { ProfilePicture } from "@prisma/client";
+import * as profilePicturesJson from "../fixtures/profile-pictures";
+import { CreateProfilePictureDto } from "src/profile-pictures/dto/create-profile-picture.dto";
+import { UpdateProfilePictureDto } from "src/profile-pictures/dto/update-profile-picture.dto";
 
 let findedProfilePicture: ProfilePicture;
 let createdProfilePicture: ProfilePicture;
 let app: INestApplication;
 
-describe('AppController (e2e)', () => {
+describe("AppController (e2e)", () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [ProfilePicturesModule],
@@ -22,9 +22,11 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  describe('/profile-pictures (GET)', () => {
-    it('should get all profile pictures', async () => {
-      let response = await request(app.getHttpServer()).get('/profile-pictures');
+  describe("/profile-pictures (GET)", () => {
+    it("should get all profile pictures", async () => {
+      let response = await request(app.getHttpServer()).get(
+        "/profile-pictures"
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
@@ -33,38 +35,38 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('/profile-pictures/:id (GET)', () => {
-    it('should get a single profile picture', async () => {
+  describe("/profile-pictures/:id (GET)", () => {
+    it("should get a single profile picture", async () => {
       const id = findedProfilePicture.id;
 
-      let response = await request(app.getHttpServer())
-        .get(`/profile-pictures/${id}`);
+      let response = await request(app.getHttpServer()).get(
+        `/profile-pictures/${id}`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(findedProfilePicture);
     });
 
-    it('should return a 404', async () => {
-
-      let response = await request(app.getHttpServer())
-        .get(`/profile-pictures/eusimplesmentenaoexisto`);
+    it("should return a 404", async () => {
+      let response = await request(app.getHttpServer()).get(
+        `/profile-pictures/eusimplesmentenaoexisto`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
     });
   });
 
-  describe('/profile-pictures/ (POST)', () => {
-    it('should create a new profile picture', async () => {
+  describe("/profile-pictures/ (POST)", () => {
+    it("should create a new profile picture", async () => {
       let newProfilePicture: CreateProfilePictureDto = {
-        title: 'Kant',
-        url: 'http://kant.pru/image.png'
-      }
-
+        title: "Kant",
+        url: "http://kant.pru/image.png",
+      };
 
       let response = await request(app.getHttpServer())
-        .post('/profile-pictures')
+        .post("/profile-pictures")
         .send(newProfilePicture);
 
       expect(response).toBeDefined();
@@ -75,14 +77,13 @@ describe('AppController (e2e)', () => {
       createdProfilePicture = response.body;
     });
 
-    it('should return status code 400', async () => {
+    it("should return status code 400", async () => {
       let newProfilePicture = {
-        title: 'I only have a title'
-      }
-
+        title: "I only have a title",
+      };
 
       let response = await request(app.getHttpServer())
-        .post('/profile-pictures')
+        .post("/profile-pictures")
         .send(newProfilePicture);
 
       expect(response).toBeDefined();
@@ -90,12 +91,12 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('/profile-pictures/:id (PATCH)', () => {
-    it('should update a profile picture', async () => {
+  describe("/profile-pictures/:id (PATCH)", () => {
+    it("should update a profile picture", async () => {
       let updatedProfilePicture: UpdateProfilePictureDto = {
-        title: 'foo',
-        url: 'bar'
-      }
+        title: "foo",
+        url: "bar",
+      };
 
       let response = await request(app.getHttpServer())
         .patch(`/profile-pictures/${createdProfilePicture.id}`)
@@ -109,12 +110,12 @@ describe('AppController (e2e)', () => {
       createdProfilePicture = response.body;
     });
 
-    it('should change only valid fields', async () => {
+    it("should change only valid fields", async () => {
       let updatedProfilePicture = {
-        id: 'new id',
+        id: "new id",
         invalidField: true,
-        url: 'baaar'
-      }
+        url: "baaar",
+      };
 
       let response = await request(app.getHttpServer())
         .patch(`/profile-pictures/${createdProfilePicture.id}`)
@@ -122,18 +123,19 @@ describe('AppController (e2e)', () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(response.body.id).not.toEqual('new id');
+      expect(response.body.id).not.toEqual("new id");
       expect(response.body?.invalidField).toBeUndefined();
-      expect(response.body.url).toEqual('baaar');
+      expect(response.body.url).toEqual("baaar");
 
-      createdProfilePicture.url = 'baaar';
+      createdProfilePicture.url = "baaar";
     });
   });
 
-  describe('/profile-pictures/:id (DELETE)', () => {
-    it('/profile-pictures/:id (DELETE)', async () => {
-      let response = await request(app.getHttpServer())
-        .delete(`/profile-pictures/${createdProfilePicture.id}`);
+  describe("/profile-pictures/:id (DELETE)", () => {
+    it("/profile-pictures/:id (DELETE)", async () => {
+      let response = await request(app.getHttpServer()).delete(
+        `/profile-pictures/${createdProfilePicture.id}`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
@@ -141,8 +143,9 @@ describe('AppController (e2e)', () => {
       expect(response.body.title).toEqual(createdProfilePicture.title);
       expect(response.body.url).toEqual(createdProfilePicture.url);
 
-      response = await request(app.getHttpServer())
-        .get(`/profile-pictures/${createdProfilePicture.id}`);
+      response = await request(app.getHttpServer()).get(
+        `/profile-pictures/${createdProfilePicture.id}`
+      );
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);

@@ -1,4 +1,4 @@
-import { Module } from '@prisma/client';
+import { Module } from "@prisma/client";
 
 export class ModuleEntity implements Module {
   id: string;

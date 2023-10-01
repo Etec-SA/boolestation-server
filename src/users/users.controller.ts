@@ -1,18 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiTags, ApiCreatedResponse } from '@nestjs/swagger';
-import { Role } from '../auth/enums/roles.enum';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { UserEntity } from './entities/user.entity';
-import { AuthRequest } from 'src/auth/entities/auth-request.entity';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Request,
+} from "@nestjs/common";
+import { UsersService } from "./users.service";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiTags,
+  ApiCreatedResponse,
+} from "@nestjs/swagger";
+import { Role } from "../auth/enums/roles.enum";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { UserEntity } from "./entities/user.entity";
+import { AuthRequest } from "src/auth/entities/auth-request.entity";
 
 @ApiBearerAuth()
-@ApiTags('users')
-@Controller('users')
+@ApiTags("users")
+@Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Roles(Role.Admin)
   @ApiCreatedResponse({ type: UserEntity })
@@ -30,22 +44,22 @@ export class UsersController {
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: UserEntity })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.usersService.findOne(id);
   }
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: UserEntity })
-  @Patch(':id')
+  @Patch(":id")
   update(@Body() updateUserDto: UpdateUserDto, @Request() req: AuthRequest) {
     return this.usersService.update(req.user.id, updateUserDto);
   }
 
   @Roles(Role.Admin)
   @ApiOkResponse({ type: UserEntity })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.usersService.remove(id);
   }
 }

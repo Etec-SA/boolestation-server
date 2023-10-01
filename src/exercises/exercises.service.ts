@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { LessonsService } from 'src/lessons/lessons.service';
-import { PrismaService } from '../database/prisma.service';
-import { CreateExerciseDto } from './dto/create-exercise.dto';
-import { UpdateExerciseDto } from './dto/update-exercise.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { LessonsService } from "../lessons/lessons.service";
+import { PrismaService } from "../database/prisma.service";
+import { CreateExerciseDto } from "./dto/create-exercise.dto";
+import { UpdateExerciseDto } from "./dto/update-exercise.dto";
 
 @Injectable()
 export class ExercisesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly lessonsService: LessonsService
-  ) { }
+  ) {}
 
   async create(data: CreateExerciseDto) {
     await this.lessonsService.findOne(data.lessonId);
@@ -23,7 +23,7 @@ export class ExercisesService {
 
   async findOne(id: string) {
     const exercise = await this.prisma.exercise.findFirst({ where: { id } });
-    if (!exercise) throw new NotFoundException('Exercise not found.');
+    if (!exercise) throw new NotFoundException("Exercise not found.");
     return exercise;
   }
 

@@ -1,17 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ExercisesService } from './exercises.service';
-import { CreateExerciseDto } from './dto/create-exercise.dto';
-import { UpdateExerciseDto } from './dto/update-exercise.dto';
-import { IsPublic } from '../auth/decorators/is-public.decorator';
-import { ApiTags, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { Role } from '../auth/enums/roles.enum';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { ExerciseEntity } from './entities/exercise.entity';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from "@nestjs/common";
+import { ExercisesService } from "./exercises.service";
+import { CreateExerciseDto } from "./dto/create-exercise.dto";
+import { UpdateExerciseDto } from "./dto/update-exercise.dto";
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from "@nestjs/swagger";
+import { Role } from "../auth/enums/roles.enum";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { ExerciseEntity } from "./entities/exercise.entity";
+import { IsPublic } from "../auth/decorators/is-public.decorator";
 
-@ApiTags('exercises')
-@Controller('exercises')
+@ApiTags("exercises")
+@Controller("exercises")
 export class ExercisesController {
-  constructor(private readonly exercisesService: ExercisesService) { }
+  constructor(private readonly exercisesService: ExercisesService) {}
 
   @Roles(Role.Admin)
   @ApiBearerAuth()
@@ -30,24 +43,27 @@ export class ExercisesController {
 
   @ApiBearerAuth()
   @ApiOkResponse({ type: ExerciseEntity })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.exercisesService.findOne(id);
   }
 
-  @Roles(Role.Admin)
+  @IsPublic()
   @ApiBearerAuth()
   @ApiOkResponse({ type: ExerciseEntity })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExerciseDto: UpdateExerciseDto) {
+  @Patch(":id")
+  update(
+    @Param("id") id: string,
+    @Body() updateExerciseDto: UpdateExerciseDto
+  ) {
     return this.exercisesService.update(id, updateExerciseDto);
   }
 
   @Roles(Role.Admin)
   @ApiBearerAuth()
   @ApiOkResponse({ type: ExerciseEntity })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.exercisesService.remove(id);
   }
 }
