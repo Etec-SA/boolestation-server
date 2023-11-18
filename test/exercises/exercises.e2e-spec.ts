@@ -4,7 +4,6 @@ import { ExercisesModule } from "../../src/exercises/exercises.module";
 import * as request from "supertest";
 import { CreateExerciseDto } from "../../src/exercises/dto/create-exercise.dto";
 import { Exercise } from "@prisma/client";
-import { UpdateExerciseDto } from "src/exercises/dto/update-exercise.dto";
 
 let app: INestApplication;
 let createdExercise: Partial<Exercise>;

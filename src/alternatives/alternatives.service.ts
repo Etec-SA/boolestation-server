@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAlternativeDto } from './dto/create-alternative.dto';
-import { UpdateAlternativeDto } from './dto/update-alternative.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CreateAlternativeDto } from "./dto/create-alternative.dto";
+import { UpdateAlternativeDto } from "./dto/update-alternative.dto";
+import { PrismaService } from "../database/prisma.service";
+import { ExercisesService } from "../exercises/exercises.service";
 
 @Injectable()
 export class AlternativesService {
-  create(createAlternativeDto: CreateAlternativeDto) {
-    return 'This action adds a new alternative';
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly exercisesService: ExercisesService
+  ) {}
+
+  async create(data: CreateAlternativeDto) {
+    const exercise = await this.exercisesService.findOne(data.exerciseId);
+    if (!exercise) throw new NotFoundException("Exercise Not Found");
+
+    const alternative = await this.prisma.alternative.create({ data });
+    return alternative;
   }
 
   findAll() {
-    return `This action returns all alternatives`;
+    return this.prisma.alternative.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alternative`;
+  async findOne(id: string) {
+    const alternative = await this.prisma.alternative.findUnique({
+      where: { id },
+    });
+
+    if (!alternative) throw new NotFoundException("Alternative Not Found.");
+
+    return alternative;
   }
 
-  update(id: number, updateAlternativeDto: UpdateAlternativeDto) {
-    return `This action updates a #${id} alternative`;
+  async update(id: string, data: UpdateAlternativeDto) {
+    const exercise = await this.exercisesService.findOne(data.exerciseId);
+    if (!exercise) throw new NotFoundException("Exercise Not Found");
+
+    return this.prisma.alternative.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} alternative`;
+  async remove(id: string) {
+    const alternative = await this.prisma.alternative.findUnique({
+      where: { id },
+    });
+
+    if (!alternative) throw new NotFoundException("Alternative Not Found");
+
+    return this.prisma.alternative.delete({ where: { id } });
   }
 }

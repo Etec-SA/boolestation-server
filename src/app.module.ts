@@ -12,7 +12,7 @@ import { RolesGuard } from "./auth/guards/roles.guard";
 import { ModulesModule } from "./modules/modules.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { ExercisesModule } from "./exercises/exercises.module";
-import { AlternativesModule } from './alternatives/alternatives.module';
+import { AlternativesModule } from "./alternatives/alternatives.module";
 
 @Module({
   imports: [
