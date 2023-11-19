@@ -48,7 +48,6 @@ export class ExercisesController {
     return this.exercisesService.findOne(id);
   }
 
-  @IsPublic()
   @ApiBearerAuth()
   @ApiOkResponse({ type: ExerciseEntity })
   @Patch(":id")
