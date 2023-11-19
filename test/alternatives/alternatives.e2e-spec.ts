@@ -4,7 +4,7 @@ import * as request from "supertest";
 import { Alternative } from "@prisma/client";
 import { AlternativesModule } from "../../src/alternatives/alternatives.module";
 import { CreateAlternativeDto } from "../../src/alternatives/dto/create-alternative.dto";
-import { data } from "../fixtures/alternatives";
+import { data } from "../fixtures/single/alternatives";
 
 let app: INestApplication;
 let createdAlternative: Partial<Alternative>;

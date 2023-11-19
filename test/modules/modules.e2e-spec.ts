@@ -4,7 +4,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { CreateModuleDto } from "../../src/modules/dto/create-module.dto";
 import * as request from "supertest";
 import { Module } from "@prisma/client";
-import * as modulesData from "../fixtures/modules";
+import * as modulesData from "../fixtures/single/modules";
 
 let app: INestApplication;
 let createdModule: Partial<Module>;

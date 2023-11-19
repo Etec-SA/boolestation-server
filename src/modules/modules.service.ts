@@ -16,11 +16,36 @@ export class ModulesService {
   }
 
   findAll() {
-    return this.prisma.module.findMany();
+    return this.prisma.module.findMany({
+      include: {
+        lessons: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            content: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: string) {
-    const module = await this.prisma.module.findFirst({ where: { id } });
+    const module = await this.prisma.module.findFirst({
+      where: { id },
+      include: {
+        lessons: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            content: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
 
     if (!module) throw new NotFoundException("Module not found.");
 
