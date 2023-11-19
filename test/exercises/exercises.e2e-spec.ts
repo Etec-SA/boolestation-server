@@ -4,6 +4,7 @@ import { ExercisesModule } from "../../src/exercises/exercises.module";
 import * as request from "supertest";
 import { CreateExerciseDto } from "../../src/exercises/dto/create-exercise.dto";
 import { Exercise } from "@prisma/client";
+import * as data from "../fixtures/exercises.json";
 
 let app: INestApplication;
 let createdExercise: Partial<Exercise>;
@@ -63,7 +64,7 @@ describe("ExercisesController (e2e)", () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(typeof response.body).toEqual(typeof response.body);
+      expect(typeof response.body).toEqual(typeof data);
       findedExercise = response.body[0];
     });
   });
@@ -90,15 +91,13 @@ describe("ExercisesController (e2e)", () => {
   });
 
   describe("/exercises/:id (PATCH)", () => {
-    it('should update an exercise with success', async () => {
+    it("should update an exercise with success", async () => {
       const updatedExercise = {
-        title: 'New Exercise',
-        description: 'Now updated.',
-        id: 'you cant change it',
-        invalidField: 'you cant send it',
+        title: "New Exercise",
+        description: "Now updated.",
+        id: "you cant change it",
+        invalidField: "you cant send it",
       };
-
-
 
       const response = await request(app.getHttpServer())
         .patch(`/exercises/${createdExercise.id}`)
@@ -112,15 +111,13 @@ describe("ExercisesController (e2e)", () => {
       expect(response.body.id).not.toEqual(updatedExercise.id);
     });
 
-    it('should return 404', async () => {
+    it("should return 404", async () => {
       const updatedExercise = {
-        title: 'New Exercise',
-        description: 'Now updated.',
-        id: 'you cant change it',
-        invalidField: 'you cant send it',
+        title: "New Exercise",
+        description: "Now updated.",
+        id: "you cant change it",
+        invalidField: "you cant send it",
       };
-
-
 
       const response = await request(app.getHttpServer())
         .patch(`/exercises/2012`)
@@ -129,8 +126,6 @@ describe("ExercisesController (e2e)", () => {
       expect(response).toBeDefined();
       expect(response.status).toEqual(404);
     });
-
-
   });
 
   describe("/exercises/:id (DELETE)", () => {

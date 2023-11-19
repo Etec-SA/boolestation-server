@@ -19,7 +19,7 @@ import {
 import { Role } from "../auth/enums/roles.enum";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { ExerciseEntity } from "./entities/exercise.entity";
-import { IsPublic } from "../auth/decorators/is-public.decorator";
+import { GetExerciseEntity } from "./entities/get-exercise.entity";
 
 @ApiTags("exercises")
 @Controller("exercises")
@@ -35,20 +35,20 @@ export class ExercisesController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: ExerciseEntity, isArray: true })
+  @ApiOkResponse({ type: GetExerciseEntity, isArray: true })
   @Get()
   findAll() {
     return this.exercisesService.findAll();
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: ExerciseEntity })
+  @ApiOkResponse({ type: GetExerciseEntity })
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.exercisesService.findOne(id);
   }
 
-  @IsPublic()
+  @Roles(Role.Admin)
   @ApiBearerAuth()
   @ApiOkResponse({ type: ExerciseEntity })
   @Patch(":id")

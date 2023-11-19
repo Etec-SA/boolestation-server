@@ -21,11 +21,40 @@ export class LessonsService {
   }
 
   findAll() {
-    return this.prisma.lesson.findMany();
+    return this.prisma.lesson.findMany({
+      include: {
+        exercises: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            createdAt: true,
+            alternatives: {
+              select: { id: true, isCorrect: true, content: true },
+            },
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: string) {
-    const lesson = await this.prisma.lesson.findFirst({ where: { id } });
+    const lesson = await this.prisma.lesson.findFirst({
+      where: { id },
+      include: {
+        exercises: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            createdAt: true,
+            alternatives: {
+              select: { id: true, isCorrect: true, content: true },
+            },
+          },
+        },
+      },
+    });
     if (!lesson) throw new NotFoundException("Lesson not found.");
     return lesson;
   }

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "4151e54b-8517-4871-a1d2-acfb67a8bf1a",
+    "title": "Silogismos",
+    "slug": "silogismos",
+    "content": "Exploraremos aqui os silogismos da lógica tradicional",
+    "moduleId": "4151e54b-8517-4871-a1d2-acfb67a8bf1a",
+    "createdAt": "2023-11-16T21:45:17.281Z",
+    "updatedAt": "2023-11-16T21:45:17.281Z",
+    "exercises": [
+      {
+        "id": "4151e54b-8517-4871-a1d2-acfb67a8bf1a",
+        "title": "Invalidade de Silogismos",
+        "description": "Qual dos seguintes silogismos possui uma forma inválida?",
+        "createdAt": "2023-11-16T21:45:17.419Z",
+        "alternatives": [
+          {
+            "id": "4b11819c-e966-4f04-8eb0-851bb542e275",
+            "isCorrect": false,
+            "content": "Silogismo Válido"
+          },
+          {
+            "id": "673965bc-cc26-4300-a1f5-8287124a4108",
+            "isCorrect": false,
+            "content": "Silogismo Válido 2"
+          },
+          {
+            "id": "4151e54b-8517-4871-a1d2-acfb67a8bf1a",
+            "isCorrect": true,
+            "content": "Silogismo Inválido"
+          },
+          {
+            "id": "8e6b9ecd-e755-4e85-aee4-89eaac8f81cb",
+            "isCorrect": false,
+            "content": "Silogismo Válido 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "af0f6b40-d98d-4a77-a1a1-3fdfff114511",
+    "title": "Operador de Implicação",
+    "slug": "operador-de-implicacao",
+    "content": "Exploraremos aqui a aplicação do operador de implicação",
+    "moduleId": "af0f6b40-d98d-4a77-a1a1-3fdfff114511",
+    "createdAt": "2023-11-16T21:45:17.281Z",
+    "updatedAt": "2023-11-16T21:45:17.281Z",
+    "exercises": [
+      {
+        "id": "af0f6b40-d98d-4a77-a1a1-3fdfff114511",
+        "title": "Equivalência da Implicação",
+        "description": "Quais das seguintes fórmulas é equivalente a uma implicação?",
+        "createdAt": "2023-11-16T21:45:17.419Z",
+        "alternatives": [
+          {
+            "id": "af0f6b40-d98d-4a77-a1a1-3fdfff114511",
+            "isCorrect": true,
+            "content": "¬P v Q"
+          },
+          {
+            "id": "3a40bdea-cb78-420c-917f-f61d0d58c6d7",
+            "isCorrect": false,
+            "content": "A ^ A"
+          },
+          {
+            "id": "8db9e069-e4d7-46b9-a4c2-dcc1ae5b90ea",
+            "isCorrect": false,
+            "content": "¬¬(A ^ ¬¬A)"
+          },
+          {
+            "id": "1e38ce3c-c5ef-42f5-852f-53ba77bcaa6c",
+            "isCorrect": false,
+            "content": "A ^ ¬A"
+          }
+        ]
+      }
+    ]
+  }
+]

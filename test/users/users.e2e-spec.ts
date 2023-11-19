@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
 import { UsersModule } from "../../src/users/users.module";
-import * as usersJson from "../fixtures/user";
+import * as usersJson from "../fixtures/single/user";
 import { CreateUserDto } from "../../src/users/dto/create-user.dto";
 import * as request from "supertest";
 

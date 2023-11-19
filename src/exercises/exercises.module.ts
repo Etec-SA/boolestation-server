@@ -8,5 +8,6 @@ import { LessonsModule } from "../lessons/lessons.module";
   controllers: [ExercisesController],
   providers: [ExercisesService, PrismaService],
   imports: [LessonsModule],
+  exports: [ExercisesService],
 })
 export class ExercisesModule {}

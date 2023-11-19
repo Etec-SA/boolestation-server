@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { LevelStatesModule } from "../../src/level-states/level-states.module";
-import * as levelStatesJson from "../fixtures/level-states";
+import * as levelStatesJson from "../fixtures/single/level-states";
 import { CreateLevelStateDto } from "src/level-states/dto/create-level-state.dto";
 import { LevelState } from "@prisma/client";
 import { UpdateLevelStateDto } from "src/level-states/dto/update-level-state.dto";

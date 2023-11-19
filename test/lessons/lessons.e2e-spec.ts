@@ -4,6 +4,7 @@ import * as request from "supertest";
 import { Lesson } from "@prisma/client";
 import { LessonsModule } from "../../src/lessons/lessons.module";
 import { CreateLessonDto } from "../../src/lessons/dto/create-lesson.dto";
+import * as data from "../fixtures/lessons.json";
 
 let app: INestApplication;
 let createdLesson: Partial<Lesson>;
@@ -63,7 +64,7 @@ describe("LessonsController (e2e)", () => {
 
       expect(response).toBeDefined();
       expect(response.status).toEqual(200);
-      expect(typeof response.body).toEqual(typeof response.body);
+      expect(typeof response.body).toEqual(typeof data);
       findedLesson = response.body[0];
     });
   });

@@ -18,11 +18,32 @@ export class ExercisesService {
   }
 
   findAll() {
-    return this.prisma.exercise.findMany();
+    return this.prisma.exercise.findMany({
+      include: {
+        alternatives: {
+          select: {
+            id: true,
+            content: true,
+            isCorrect: true,
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: string) {
-    const exercise = await this.prisma.exercise.findFirst({ where: { id } });
+    const exercise = await this.prisma.exercise.findFirst({
+      where: { id },
+      include: {
+        alternatives: {
+          select: {
+            id: true,
+            content: true,
+            isCorrect: true,
+          },
+        },
+      },
+    });
     if (!exercise) throw new NotFoundException("Exercise not found.");
     return exercise;
   }

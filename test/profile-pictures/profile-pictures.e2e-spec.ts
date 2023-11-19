@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { ProfilePicturesModule } from "../../src/profile-pictures/profile-pictures.module";
 import { ProfilePicture } from "@prisma/client";
-import * as profilePicturesJson from "../fixtures/profile-pictures";
+import * as profilePicturesJson from "../fixtures/single/profile-pictures";
 import { CreateProfilePictureDto } from "src/profile-pictures/dto/create-profile-picture.dto";
 import { UpdateProfilePictureDto } from "src/profile-pictures/dto/update-profile-picture.dto";
 
