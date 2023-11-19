@@ -19,6 +19,7 @@ import {
 import { Roles } from "../auth/decorators/roles.decorator";
 import { Role } from "../auth/enums/roles.enum";
 import { LessonEntity } from "./entities/lesson.entity";
+import { GetLessonEntity } from "./entities/get-lesson.entity";
 
 @ApiTags("lessons")
 @Controller("lessons")
@@ -34,14 +35,14 @@ export class LessonsController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: LessonEntity, isArray: true })
+  @ApiOkResponse({ type: GetLessonEntity, isArray: true })
   @Get()
   findAll() {
     return this.lessonsService.findAll();
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: LessonEntity })
+  @ApiOkResponse({ type: GetLessonEntity })
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.lessonsService.findOne(id);
