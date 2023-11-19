@@ -48,6 +48,7 @@ export class ExercisesController {
     return this.exercisesService.findOne(id);
   }
 
+  @Roles(Role.Admin)
   @ApiBearerAuth()
   @ApiOkResponse({ type: ExerciseEntity })
   @Patch(":id")
