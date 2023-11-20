@@ -4,6 +4,7 @@ import { CreateLessonDto } from "./dto/create-lesson.dto";
 import { UpdateLessonDto } from "./dto/update-lesson.dto";
 import slugify from "slugify";
 import { ModulesService } from "../modules/modules.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class LessonsService {
@@ -20,22 +21,37 @@ export class LessonsService {
     return lesson;
   }
 
-  findAll() {
-    return this.prisma.lesson.findMany({
-      include: {
-        exercises: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            createdAt: true,
-            alternatives: {
-              select: { id: true, isCorrect: true, content: true },
-            },
+  async findAll(moduleId: string) {
+    const include = Prisma.validator<Prisma.LessonInclude>()({
+      exercises: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          alternatives: {
+            select: { id: true, isCorrect: true, content: true },
           },
         },
       },
     });
+
+    const orderBy = Prisma.validator<Prisma.LessonOrderByWithRelationInput>()({
+      createdAt: "asc",
+    });
+
+    const query = { include, orderBy };
+
+    if (!moduleId) return this.prisma.lesson.findMany({ ...query });
+
+    const lessons = await this.prisma.lesson.findMany({
+      where: { moduleId },
+      ...query,
+    });
+
+    if (lessons.length === 0) throw new NotFoundException("Lessons not found.");
+
+    return lessons;
   }
 
   async findOne(id: string) {
