@@ -3,6 +3,7 @@ import { LessonsService } from "../lessons/lessons.service";
 import { PrismaService } from "../database/prisma.service";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { UpdateExerciseDto } from "./dto/update-exercise.dto";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class ExercisesService {
@@ -17,18 +18,28 @@ export class ExercisesService {
     return exercise;
   }
 
-  findAll() {
-    return this.prisma.exercise.findMany({
-      include: {
-        alternatives: {
-          select: {
-            id: true,
-            content: true,
-            isCorrect: true,
-          },
+  async findAll(lessonId: string) {
+    const include = Prisma.validator<Prisma.ExerciseInclude>()({
+      alternatives: {
+        select: {
+          id: true,
+          content: true,
+          isCorrect: true,
         },
       },
     });
+
+    if (!lessonId) return this.prisma.exercise.findMany({ include });
+
+    const exercises = await this.prisma.exercise.findMany({
+      include,
+      where: { lessonId },
+    });
+
+    if (exercises.length === 0)
+      throw new NotFoundException("Exercises not found.");
+
+    return exercises;
   }
 
   async findOne(id: string) {

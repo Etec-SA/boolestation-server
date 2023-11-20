@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { ExercisesService } from "./exercises.service";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
@@ -15,6 +16,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { Role } from "../auth/enums/roles.enum";
 import { Roles } from "../auth/decorators/roles.decorator";
@@ -36,9 +38,10 @@ export class ExercisesController {
 
   @ApiBearerAuth()
   @ApiOkResponse({ type: GetExerciseEntity, isArray: true })
+  @ApiQuery({ name: "lesson-id", required: false, type: String })
   @Get()
-  findAll() {
-    return this.exercisesService.findAll();
+  findAll(@Query("lesson-id") lessonId: string) {
+    return this.exercisesService.findAll(lessonId);
   }
 
   @ApiBearerAuth()
