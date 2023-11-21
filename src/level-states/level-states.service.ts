@@ -3,6 +3,7 @@ import { PrismaService } from "../database/prisma.service";
 import { CreateLevelStateDto } from "./dto/create-level-state.dto";
 import { UpdateLevelStateDto } from "./dto/update-level-state.dto";
 import { NotFoundException } from "@nestjs/common";
+import { LevelStateEntity } from "./entities/level-state.entity";
 
 @Injectable()
 export class LevelStatesService {
@@ -37,6 +38,31 @@ export class LevelStatesService {
 
     if (!levelStateId) throw new NotFoundException("Level State not found!");
     return levelStateId;
+  }
+
+  async findNextLevelState(previousLevelStateId: string) {
+    const previousLevelState = await this.prisma.levelState.findUnique({
+      where: { id: previousLevelStateId },
+      select: { requiredXp: true },
+    });
+
+    if (!previousLevelState)
+      throw new NotFoundException(`Previous Level State Not Found.`);
+
+    const levelState = await this.prisma.levelState.findFirst({
+      where: {
+        requiredXp: {
+          gt: previousLevelState.requiredXp,
+        },
+      },
+      orderBy: {
+        requiredXp: "asc",
+      },
+    });
+
+    if (!levelState) throw new NotFoundException(`Next Level State Not Found.`);
+
+    return levelState;
   }
 
   async update(id: string, data: UpdateLevelStateDto) {

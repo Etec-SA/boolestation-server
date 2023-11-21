@@ -50,6 +50,12 @@ export class LevelStatesController {
     return levelState;
   }
 
+  @Get(":id/next")
+  async findNext(@Param("id") id: string) {
+    const levelState = await this.levelStatesService.findNextLevelState(id);
+    return levelState;
+  }
+
   @Roles(Role.Admin)
   @ApiOkResponse({ type: LevelStateEntity })
   @ApiBearerAuth()
