@@ -13,6 +13,7 @@ import { ModulesModule } from "./modules/modules.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { ExercisesModule } from "./exercises/exercises.module";
 import { AlternativesModule } from "./alternatives/alternatives.module";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AlternativesModule } from "./alternatives/alternatives.module";
     LessonsModule,
     ExercisesModule,
     AlternativesModule,
+    CacheModule.register({ ttl: 0, isGlobal: true }),
   ],
   controllers: [AppController],
   providers: [

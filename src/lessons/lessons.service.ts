@@ -5,12 +5,14 @@ import { UpdateLessonDto } from "./dto/update-lesson.dto";
 import slugify from "slugify";
 import { ModulesService } from "../modules/modules.service";
 import { Prisma } from "@prisma/client";
+import { LessonsCacheService } from "./cache/lessons-cache.service";
 
 @Injectable()
 export class LessonsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly modulesService: ModulesService
+    private readonly modulesService: ModulesService,
+    private readonly cache: LessonsCacheService
   ) {}
 
   async create(data: CreateLessonDto) {
@@ -18,11 +20,18 @@ export class LessonsService {
 
     const slug = slugify(data.title, { lower: true });
     const lesson = await this.prisma.lesson.create({ data: { ...data, slug } });
+    this.cache.clear();
     return lesson;
   }
 
   async findAll(moduleId: string) {
-    const include = Prisma.validator<Prisma.LessonInclude>()({
+    const query = {};
+
+    const cachedLessons = await this.cache.findAll();
+
+    if (cachedLessons && !moduleId) return cachedLessons;
+
+    query["include"] = Prisma.validator<Prisma.LessonInclude>()({
       exercises: {
         select: {
           id: true,
@@ -36,20 +45,19 @@ export class LessonsService {
       },
     });
 
-    const orderBy = Prisma.validator<Prisma.LessonOrderByWithRelationInput>()({
-      createdAt: "asc",
-    });
+    query["orderBy"] =
+      Prisma.validator<Prisma.LessonOrderByWithRelationInput>()({
+        createdAt: "asc",
+      });
 
-    const query = { include, orderBy };
+    query["where"] = moduleId ? { id: moduleId } : undefined;
 
-    if (!moduleId) return this.prisma.lesson.findMany({ ...query });
+    const lessons = await this.prisma.lesson.findMany({ ...query });
 
-    const lessons = await this.prisma.lesson.findMany({
-      where: { moduleId },
-      ...query,
-    });
+    if (!query["where"]) this.cache.setLessons(lessons);
 
-    if (lessons.length === 0) throw new NotFoundException("Lessons not found.");
+    if (lessons.length === 0 || !lessons)
+      throw new NotFoundException("Lessons not found.");
 
     return lessons;
   }
@@ -84,11 +92,13 @@ export class LessonsService {
       where: { id },
       data,
     });
-
+    this.cache.clear();
     return lesson;
   }
 
-  remove(id: string) {
-    return this.prisma.lesson.delete({ where: { id } });
+  async remove(id: string) {
+    const deleted = this.prisma.lesson.delete({ where: { id } });
+    this.cache.clear();
+    return deleted;
   }
 }
